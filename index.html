@@ -6,12 +6,14 @@
     <title>MONARQUE TOOLS - DARK JUSTICE</title>
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --card-bg: #121212;
-            --accent-red: #cc0000;
-            --accent-green: #008844;
-            --text-gray: #b0b0b0;
-            --input-bg: #1a1a1a;
+            --bg-dark: #050505;
+            --card-bg: #0d0d0d;
+            --accent-red: #ff0000;
+            --accent-blue: #007bff;
+            --text-gray: #888;
+            --input-bg: #151515;
+            --glow-red: rgba(255, 0, 0, 0.5);
+            --glow-blue: rgba(0, 123, 255, 0.5);
         }
 
         body { 
@@ -23,66 +25,108 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
+        /* Bordure animée Rouge et Bleu */
         .card { 
+            position: relative;
             background: var(--card-bg); 
-            border: 1px solid #222; 
-            padding: 30px; 
+            padding: 35px; 
             border-radius: 15px; 
             max-width: 400px; 
             width: 90%;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             text-align: center;
+            z-index: 1;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-red), #111, var(--accent-blue), #111, var(--accent-red));
+            background-size: 400%;
+            z-index: -1;
+            border-radius: 16px;
+            animation: steam 15s linear infinite;
+        }
+
+        @keyframes steam {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 400% 0%; }
+            100% { background-position: 0% 0%; }
         }
 
         h1 { 
-            font-size: 22px; 
-            letter-spacing: 2px; 
+            font-size: 24px; 
+            letter-spacing: 3px; 
             margin-bottom: 5px;
             color: #fff;
         }
 
         .subtitle {
-            font-size: 9px;
-            color: #555;
+            font-size: 10px;
+            color: var(--text-gray);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
         }
 
         input, select { 
             width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
+            padding: 14px; 
+            margin-bottom: 18px; 
             background: var(--input-bg); 
-            border: 1px solid #333; 
+            border: 1px solid #222; 
             color: #fff; 
-            border-radius: 8px; 
+            border-radius: 5px; 
             box-sizing: border-box;
             font-size: 14px;
+            outline: none;
         }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        input:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px var(--glow-blue); }
+
+        .btn-group { display: flex; gap: 12px; margin-top: 10px; }
 
         button { 
             flex: 1; 
-            padding: 14px; 
+            padding: 15px; 
             cursor: pointer; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 5px; 
             font-weight: bold;
-            font-size: 13px;
-            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: 0.4s;
         }
 
-        .ban { background: var(--accent-red); color: #fff; }
-        .ban:hover { background: #ff0000; transform: scale(1.02); }
+        .ban { 
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red); 
+        }
+        .ban:hover { 
+            background: var(--accent-red); 
+            color: #fff;
+            box-shadow: 0 0 20px var(--glow-red);
+            transform: translateY(-2px);
+        }
 
-        .unban { background: var(--accent-green); color: #fff; }
-        .unban:hover { background: #00bb55; transform: scale(1.02); }
+        .unban { 
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        .unban:hover { 
+            background: var(--accent-blue); 
+            color: #fff;
+            box-shadow: 0 0 20px var(--glow-blue);
+            transform: translateY(-2px);
+        }
 
-        .footer { font-size: 10px; color: #444; margin-top: 25px; line-height: 1.4; }
+        .footer { font-size: 9px; color: #333; margin-top: 30px; letter-spacing: 1px; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -107,7 +151,8 @@
         
         <div class="footer">
             Propriété du Monarque.<br>
-            Usage réservé à la régulation des abus.
+            Usage réservé à la régulation des abus.<br>
+            © 2026 DARK JUSTICE DIVISION
         </div>
     </div>
 
@@ -128,29 +173,64 @@
                 subject = "Report: Violation of Terms of Service";
                 
                 if (reason === 'SCRIPT1') {
-                    message = "Hello WhatsApp Support Team,\n\n" +
+                    "message = "Hello WhatsApp Support Team,\n\n" +
                     "ࣩ➣ I am sending this urgent report regarding the WhatsApp account linked to the number " + number + ". This account is engaging in extremely dangerous and illegal activities, and immediate action is required to protect other users.\n\n" +
                     "1. Selling illegal goods or services.\n" +
                     "2. Sharing shocking and disturbing content.\n" +
                     "3. Using offensive and abusive language.\n" +
                     "4. High-risk activity violating WhatsApp policies.\n\n" +
                     "I request an immediate suspension of this account. Thank you.";
+                    
+                   if (reason === 'SCRIPT2') {
+                       "message = "*🔞注意! 母親に見つかった12歳の少女のホットビデオ。  🔞*
+
+  🔥🔞👉 https://miacam.xyz/?=1
+  🔥🔞👉 https://miacam.xyz/?=2
+  🔥🔞👉 https://miacam.xyz/?=3
+
+  *📵 このメッセージを 3 人の友達と共有してください!*
+  * 🥂 アダルト出会い系サイトにメールアドレスを登録して、禁断の動画を見よう！  *
+
+ 児童セックスの蔓延と利益 👍🏾
+https://api.whatsapp.com/send?phone=+92父親とのアナルセックス中に母親に見つかった12歳の少女のホットビデオ。  🔞*
+
+  🔥🔞👉 https://miacam.xyz/?=1
+  🔥🔞👉 https://miacam.xyz/?=2
+  🔥🔞👉 https://miacam.xyz/?=3
+
+  *📵 このメッセージを 3 人の友達と共有してください!*
+  * 🥂 アダルト出会い系サイトにメールアドレスを登録して、禁断の動画を見よう！  *
+
+" 児童セックスの蔓延と利益 👍🏾
+https://api.whatsapp.com/send?phone=+92"
+
+if (reason === 'SCRIPT3') {
+    "message = "Hello WhatsApp, I'm sending you this urgent report https://api.whatsapp.com/send?phone=+92 this man is a destroyer and pedophile love Fuck ten girl old 15 year and he said he kill and sacrifice them. He love sex and do it every day. This is via WhatsApp, but WhatsApp didn't pay attention to this because it doesn't have the sensibility to discover what's inside it and what it's doing. smb@support.whatsapp.com http://www.tsliah.com/index.html https://www.xnxx.com I had rough sex with my girlfriend and had sex with her until she died https:/ /www.xnxx-tv.info/watch-N3OpNwuTrM/xnxx_Ryan_Conner_anal_with_bbc/ and used WhatsApp. Because he can't know what's going on inside him and why I used his WhatsApp. To communicate with his sister while driving, he did not know what was going on inside himself and I did not fail or use Telegram, likes and Twitter. Tick-tock support@support.whatsapp.com https://www.xnxx.com/video-dvjue3c/oily_busty_slut_slammed_after_sucking_big_dick_outdoors_in_hd Or you used Facebook to complete the process. He used WhatsApp because he can't block my number because if you use any of the applications your account will be blocked as it violates the terms. I then completed the process using WhatsApp and killed the user. A girl who atones for her WhatsApp sins. XNXXsupport@support.whatsapp.com lsgyjdkodn-support@fb.com https://www.xnxx.com Israeli women whose husbands were killed by Palestinian forces contacted me on WhatsApp and sent me their whereabouts. %83%D8% B3_%D8%A7%D8%AE%D9%88%D8%A7%D8%AA_-_%D8%AA%D8%AF%D9%84%D9%8A%D8%B9_%D8 %A7%D9% 84%D9%83%D8%B3_/ Syrian woman filmed her pussy with my penis, horrible WhatsApp application, internationally scandalized application, failed application, namely WhatsApp application I published it in a sex group. . She also sent a message to Mark's sister. You can contact Bahaa via WhatsApp and send her sexy photos https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://sexalarab.com/&ved I did. =2ahUKEwjv3fzkrJmCAxVOtqQKHY7tA6gQFnoECBQQAQ&usg=AOvVaw0Ik-YcrzO_-lgPBLY03ggk She loves me so I contacted her on WhatsApp and sent her location via WhatsApp and she was able to reach her home . The pact is scheduled to meet next to the American White House at 12:00 p.m. They know that WhatsApp is a failed program because it is the home of a politically, economically and militarily powerful country. I'm sure they will suspend this ugly application WhatsApp from social media and you will suspend you https://www.xnxx.com/video-dvjue3c/oily_busty_slut_slammed_after_sucking_big_dick_outdoors_in_hd We will her She filmed a video while I was having sex with her and posted it to all groups on the WhatsApp application so that it would reach her brother Mark. Then they contacted me on WhatsApp application and I also had sex https://www.xnxx.com/video-dvjue3c/oily_busty_slut_slammed_after_sucking_big_dick_outdoors_in_hd Together with the women and my younger brother Liv, the leader WhatsApp company Since I destroyed it, I will move it to Facebook "To destroy it after the operations performed on the WhatsApp application are successful. Brother, thank you to the leadership side. Thank you for your cooperation. Thank you. I received this message. ``If anyone wants to collaborate, please contact me about my brother, leadership side, WhatsApp application, we will destroy it.'' Coming soon, here is the digital link to the application iooovvccrt@support.whatsapp.com http://www.WhatsApptsliah.com/index.html ort@support.whatsapp.com support@support.whatsapp.com 
+
+المصدر👇👇👇
+https://t.me/c_e_e1
+
+https://api.whatsapp.com/send?phone=+92"
                 } 
                 else if (reason === 'SCRIPT2') {
-                    const polish = "Możesz także zalogować się na swoje konto WhatsApp. Więcej informacji - zapraszamy do skorzystania. dzieci. Na filmie widać od 6 do 8 telefonów. Przez większość czasu w domu jest dużo pieniędzy. Jest już za późno, aby dowiedzieć się, co się dzieje. W sklepie jest mnóstwo pieniędzy i jeszcze więcej. Można go także pobrać z WhatsApp. Dużo informacji można uzyskać na telefonie i przez telefon. . Możesz go użyć po raz pierwszy. 👇👇\nhttps://whatsapp.com" + number.replace('+', '');
+                    const polish = "Możesz także zalogować się na swoje konto WhatsApp. Więcej informacji - zapraszamy do skorzystania. dzieci. Na filmie widać od 6 do 8 telefonów. Przez większość czasu w domu jest dużo pieniędzy. Jest już za późno, aby dowiedzieć się, co się dzieje. W sklepie jest mnóstwo pieniędzy i jeszcze więcej. Można go także pobrać z WhatsApp. Dużo informacji można uzyskać na telefonie i przez telefon. . Możesz go użyć po raz premierze. 👇👇\nhttps://whatsapp.com" + number.replace('+', '');
                     message = polish + "\n\n" + polish;
                 }
             } else {
                 subject = "Account Recovery Request";
                 message = "Hello,\n\nMy WhatsApp account " + number + " has been disabled. I have not violated any terms. Please review and reactivate my account. Thank you.";
+                       "Dear WhatsApp Support, I apologise for inadvertently violating the terms of service. I have now reviewed them thoroughly and will ensure full compliance moving forward. I kindly request the restoration of my account.
+
+While appealing, be respectful, acknowledge any mistakes, and assure WhatsApp that you will adhere to their guidelines in the future.
+
+My WhatsApp Account Has Banned From Using WhatsApp By Mistake. Please Unbanned My WhatsApp Number Immediately. Because I'm Studying Online Class In WhatsApp. So I Need My WhatsApp Number Very Emergency. Please My Public Exam Is Coming Soon...I Hope You Understand My Situation My WhatsApp number
++22799369202"
             }
 
-            // Construction sécurisée du lien Mailto
-            const mailtoLink = "mailto:support@://whatsapp.com" +
+            const mailtoLink = "mailto:support@whatsapp.com" +
                 "?subject=" + encodeURIComponent(subject) +
                 "&body=" + encodeURIComponent(message);
 
-            // Redirection vers l'application de mail
             window.location.href = mailtoLink;
         }
     </script>
