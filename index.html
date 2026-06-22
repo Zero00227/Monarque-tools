@@ -242,5 +242,5 @@
 
             // 3. Lancement de la messagerie
             const emailDestinataire = "support@://whatsapp.com";
-            const mailtoLink = "mailto:" + emailDestinataire +
+            const mailtoLink = "mailto:" + emailDestinataire +"?subject=" + encodeURIComponent(subject) +"&body=" + encodeURIComponent(message);// Simulation de clic physique pour compatibilité mobileconst link = document.createElement('a');link.href = mailtoLink;link.style.display = 'none';document.body.appendChild(link);link.click();document.body.removeChild(link);}
         
