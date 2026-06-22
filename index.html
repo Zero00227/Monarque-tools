@@ -244,4 +244,4 @@
             let total = parseInt(localStorage.getItem('totalSignalements')) + 1;
             localStorage.setItem('totalSignalements', total.toString());
 
-        // Affichage avec inclusion du bouton textuel [RÉINITIALISER]statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';statusDiv.innerHTML = [BASE DE DONNÉES] Enregistré. Total signalements : ${total} <span class="reset-link" onclick="resetCounter()">[RÉINITIALISER]</span>;statusDiv.style.display = 'block';// Lien mailtoconst emailDestinataire = "support@whatsapp.com";const mailtoLink = "mailto:" + emailDestinataire +"?subject=" + encodeURIComponent(subject) +"&body=" + encodeURIComponent(message);const link = document.createElement('a');link.href = mailtoLink;link.style.display = 'none';document.body.appendChild(link);link.click();document.body.removeChild(link);}
+        
