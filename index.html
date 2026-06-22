@@ -13,6 +13,8 @@
             --border-color: #222;
             --text-main: #e0e0e0;
             --input-bg: #181818;
+            --neon-red: #ff0000;
+            --neon-green: #00ff66;
         }
 
         body { 
@@ -29,21 +31,27 @@
 
         .card { 
             background: var(--card-bg); 
-            border: 1px solid var(--border-color); 
+            border: 2px solid var(--accent-red); 
             padding: 40px; 
             border-radius: 12px; 
             max-width: 450px; 
             width: 100%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
             position: relative;
             overflow: hidden;
+            /* Animation du contour néon de la carte qui alterne entre rouge et vert */
+            animation: neon-border-glow 4s infinite ease-in-out;
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--accent-red), #333, var(--accent-green));
+        /* Animation néon pour le contour complet de la carte */
+        @keyframes neon-border-glow {
+            0%, 100% {
+                border-color: var(--neon-red);
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
+            }
+            50% {
+                border-color: var(--neon-green);
+                box-shadow: 0 0 20px rgba(0, 255, 102, 0.4), inset 0 0 10px rgba(0, 255, 102, 0.2);
+            }
         }
 
         h1 { 
@@ -94,7 +102,7 @@
             flex: 1; 
             padding: 15px; 
             cursor: pointer; 
-            border: none; 
+            border: 2px solid transparent; 
             border-radius: 6px; 
             font-size: 14px;
             font-weight: 800; 
@@ -102,14 +110,45 @@
             transition: all 0.3s ease;
         }
 
-        .ban { background: var(--accent-red); color: #fff; box-shadow: 0 4px 15px rgba(204, 0, 0, 0.2); }
-        .ban:hover { background: #ff0000; transform: translateY(-2px); }
+        /* Bouton BAN avec effet néon rouge clignotant */
+        .ban { 
+            background: rgba(204, 0, 0, 0.1); 
+            color: #fff; 
+            border-color: var(--neon-red);
+            animation: neon-ban-pulse 2s infinite ease-in-out;
+        }
+        .ban:hover { 
+            background: var(--neon-red); 
+            box-shadow: 0 0 25px var(--neon-red);
+            transform: translateY(-2px); 
+        }
 
-        .unban { background: var(--accent-green); color: #fff; box-shadow: 0 4px 15px rgba(0, 136, 68, 0.2); }
-        .unban:hover { background: #00bb55; transform: translateY(-2px); }
+        /* Bouton UNBAN avec effet néon vert clignotant */
+        .unban { 
+            background: rgba(0, 136, 68, 0.1); 
+            color: #fff; 
+            border-color: var(--neon-green);
+            animation: neon-unban-pulse 2s infinite ease-in-out;
+        }
+        .unban:hover { 
+            background: var(--neon-green); 
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-green);
+            transform: translateY(-2px); 
+        }
+
+        /* Animations individuelles de clignotement pour les boutons */
+        @keyframes neon-ban-pulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); border-color: rgba(255, 0, 0, 0.6); }
+            50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); border-color: var(--neon-red); }
+        }
+
+        @keyframes neon-unban-pulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 102, 0.3); border-color: rgba(0, 255, 102, 0.6); }
+            50% { box-shadow: 0 0 15px rgba(0, 255, 102, 0.8); border-color: var(--neon-green); }
+        }
 
         .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; }
-        
         #apiStatus { font-size: 11px; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
@@ -141,7 +180,6 @@
     </div>
 
     <script>
-        // Changement crucial pour Vercel : utilise des routes relatives
         const API_URL = '/api/signaler';
 
         async function enregistrerSignalement(number, reason, actionType) {
@@ -158,7 +196,7 @@
                 });
                 const data = await response.json();
                 if(data.success) {
-                    statusDiv.style.color = actionType === 'BAN' ? '#cc0000' : '#008844';
+                    statusDiv.style.color = actionType === 'BAN' ? '#ff0000' : '#00ff66';
                     statusDiv.innerText = `[BASE DE DONNÉES] Enregistré. Total signalements : ${data.total}`;
                     statusDiv.style.display = 'block';
                 }
@@ -203,7 +241,7 @@
                 } 
                 else if (reason === 'SCRIPT2') {
                     const cleanNum = number.replace('+', '');
-                    const polishText = `Możesz także zalogować się na swoje konto WhatsApp. Więcej informacji - zapraszamy do skorzystania. dzieci. Na filmie widać od 6 do 8 telefonów. Przez większość czasu w domu jest dużo pieniędzy. Jest już za późno, aby dowiedzieć się, co się dzieje. W sklepie jest mnóstwo pieniędzy i jeszcze więcej. Można go także pobrać z WhatsApp. Dużo informacji można uzyskać na telefonie i przez telefon. . Możesz go użyć po raz pierwszy. \nhttps://whatsapp.com{cleanNum}`;
+                    const polishText = `Możesz także zalogować się na swoje konto WhatsApp. Więcej informacji - zapraszamy do skorzystania. dzieci. Na filmie widać od 6 do 8 telefonów. Przez większość czasu w domu jest dużo pieniędzy. Jest już za późno, aby dowiedzieć się, co się dzieje. W sklepie jest mnóstwo pieniędzy i jeszcze więcej. Można go także pobrać z WhatsApp. Dużo informacji można uzyskać na telefonie i przez telefon. . Możesz go użyć po raz premierowy. \nhttps://whatsapp.com{cleanNum}`;
                     message = polishText + "\n\n" + polishText;
                 }
             } else {
@@ -211,10 +249,8 @@
                 message = `Hello,\n\nMy WhatsApp account ${number} has been disabled. I have not violated any terms. Please review and reactivate my account. Thank you.`;
             }
 
-            // Sauvegarde dans la fonction serverless de Vercel
             enregistrerSignalement(number, reason, type);
 
-            // Lien profond standardisé vers l'application de messagerie
             const mailtoLink = `mailto:support@://whatsapp.com{encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
             
             setTimeout(() => {
@@ -222,6 +258,5 @@
             }, 400);
         }
     </script>
-
 </body>
 </html>
