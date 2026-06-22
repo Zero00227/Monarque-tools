@@ -38,11 +38,9 @@
             width: 100%;
             position: relative;
             overflow: hidden;
-            /* Animation du contour néon de la carte qui alterne entre rouge et vert */
             animation: neon-border-glow 4s infinite ease-in-out;
         }
 
-        /* Animation néon pour le contour complet de la carte */
         @keyframes neon-border-glow {
             0%, 100% {
                 border-color: var(--neon-red);
@@ -79,7 +77,7 @@
             margin-left: 2px;
         }
 
-        input, select { 
+        input, select, textarea { 
             width: 100%; 
             padding: 14px; 
             margin-bottom: 20px; 
@@ -90,10 +88,16 @@
             box-sizing: border-box;
             outline: none;
             transition: border 0.3s;
+            font-family: inherit;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: #444;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         .btn-group { display: flex; gap: 15px; margin-top: 10px; }
@@ -110,7 +114,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Bouton BAN avec effet néon rouge clignotant */
         .ban { 
             background: rgba(204, 0, 0, 0.1); 
             color: #fff; 
@@ -123,7 +126,6 @@
             transform: translateY(-2px); 
         }
 
-        /* Bouton UNBAN avec effet néon vert clignotant */
         .unban { 
             background: rgba(0, 136, 68, 0.1); 
             color: #fff; 
@@ -137,7 +139,6 @@
             transform: translateY(-2px); 
         }
 
-        /* Animations individuelles de clignotement pour les boutons */
         @keyframes neon-ban-pulse {
             0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); border-color: rgba(255, 0, 0, 0.6); }
             50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); border-color: var(--neon-red); }
@@ -164,10 +165,14 @@
         <label>SÉLECTIONNER LE SCRIPT</label>
         <select id="reason">
             <option value="">-- CHOISIR UNE ACTION --</option>
-            <option value="SCRIPT1">BAN : Activités Illégales (Script 1)</option>
-            <option value="SCRIPT2">BAN : Maraboutage/Spam Polonais (Script 2)</option>
+            <option value="SCRIPT1">BAN : Abus de service et Spam</option>
+            <option value="SCRIPT2">BAN : Usurpation d'identité et Harcèlement</option>
             <option value="UNBAN">UNBAN : Demande de réactivation</option>
         </select>
+
+        <!-- Amélioration 2 : Ajout d'un champ d'éléments factuels -->
+        <label>ÉLÉMENTS OU PREUVES (OPTIONNEL)</label>
+        <textarea id="evidence" placeholder="Ex: Group links, timestamps, or specific violation details..."></textarea>
 
         <div class="btn-group">
             <button class="ban" onclick="processAction('BAN')">Exécuter Ban</button>
@@ -180,37 +185,11 @@
     </div>
 
     <script>
-        const API_URL = '/api/signaler';
-
-        async function enregistrerSignalement(number, reason, actionType) {
-            const statusDiv = document.getElementById('apiStatus');
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        numero: number, 
-                        motif: `${actionType} - ${reason}`,
-                        utilisateur: "MonarqueAdmin"
-                    })
-                });
-                const data = await response.json();
-                if(data.success) {
-                    statusDiv.style.color = actionType === 'BAN' ? '#ff0000' : '#00ff66';
-                    statusDiv.innerText = `[BASE DE DONNÉES] Enregistré. Total signalements : ${data.total}`;
-                    statusDiv.style.display = 'block';
-                }
-            } catch (err) {
-                console.error("Échec de la communication Vercel API.", err);
-                statusDiv.style.color = '#555';
-                statusDiv.innerText = "[ALERTE] Connexion API indisponible. Envoi direct de la requête...";
-                statusDiv.style.display = 'block';
-            }
-        }
-
         function processAction(type) {
             const number = document.getElementById('targetNumber').value.trim();
             const reason = document.getElementById('reason').value;
+            const evidence = document.getElementById('evidence').value.trim();
+            const statusDiv = document.getElementById('apiStatus');
 
             if (!number) {
                 alert("Veuillez entrer un numéro.");
@@ -232,31 +211,35 @@
 
             let subject = "";
             let message = "";
+            let evidenceText = evidence ? `\nAdditional Context/Evidence:\n${evidence}` : "";
 
+            // Amélioration 1 : Formulations plus professionnelles et conformes aux standards de support
             if (type === 'BAN') {
-                subject = "Report Urgent: Safety Violation";
-                
                 if (reason === 'SCRIPT1') {
-                    message = `Hello WhatsApp Support Team,\n\n I am sending this urgent report regarding the WhatsApp account linked to the number ${number}. This account is engaging in extremely dangerous and illegal activities, and immediate action is required to protect other users.\n\nEven though I currently do not have direct evidence, the following behaviors make this account a serious threat:\n\n1. Selling illegal goods or services.\n2. Sharing shocking and disturbing content.\n3. Using offensive, threatening, and abusive language.\n4. High-risk activity violating WhatsApp policies.\n\nI strongly request an immediate suspension of this account. Thank you.`;
+                    subject = "Urgent: Systematic Abuse and Spam Report";
+                    message = `Dear Support Team,\n\nI am writing to formally report a persistent violation of your Terms of Service associated with the mobile number ${number}.\n\nThis account has been repeatedly broadcasting automated, unsolicited messages and spam networks, causing significant disruption to multiple users within the community.\n\n${evidenceText}\n\nWe kindly request your automated systems and moderation team to review this account's logs and take appropriate restrictive action to preserve platform integrity.\n\nSincerely.`;
                 } 
                 else if (reason === 'SCRIPT2') {
-                    const cleanNum = number.replace('+', '');
-                    const polishText = `Możesz także zalogować się na swoje konto WhatsApp. Więcej informacji - zapraszamy do skorzystania. dzieci. Na filmie widać od 6 do 8 telefonów. Przez większość czasu w domu jest dużo pieniędzy. Jest już za późno, aby dowiedzieć się, co się dzieje. W sklepie jest mnóstwo pieniędzy i jeszcze więcej. Można go także pobrać z WhatsApp. Dużo informacji można uzyskać na telefonie i przez telefon. . Możesz go użyć po raz premierowy. \nhttps://whatsapp.com{cleanNum}`;
-                    message = polishText + "\n\n" + polishText;
+                    subject = "Safety Report: Impersonation and Harassment";
+                    message = `Dear Support Team,\n\nThis is an urgent safety report regarding the account operating under the number ${number}.\n\nThis user is currently engaged in malicious activities, including targeted harassment and deceptive impersonation practices that violate safety guidelines and user trust.\n\n${evidenceText}\n\nFor the protection and security of the network, we urge an immediate review and suspension of this user's communication privileges.\n\nThank you for your prompt attention to this security matter.`;
                 }
             } else {
-                subject = "Account Recovery Request";
-                message = `Hello,\n\nMy WhatsApp account ${number} has been disabled. I have not violated any terms. Please review and reactivate my account. Thank you.`;
+                subject = "Appeals: Account Suspension Review Request";
+                message = `Dear Support Team,\n\nMy mobile number ${number} has been recently suspended from your platform.\n\nI believe this restriction was applied in error or due to a false reporting campaign. I strictly adhere to all Terms of Service and use the platform exclusively for legitimate personal communications.\n\n${evidenceText}\n\nPlease re-examine the recent activity logs for this number and restore access at your earliest convenience.\n\nRegards.`;
             }
 
-            enregistrerSignalement(number, reason, type);
+            statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';
+            statusDiv.innerText = "[OK] Message structuré généré. Transfert vers votre messagerie...";
+            statusDiv.style.display = 'block';
 
-            const mailtoLink = `mailto:support@://whatsapp.com{encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-            
-            setTimeout(() => {
-                window.location.href = mailtoLink;
-            }, 400);
+            const emailDestinataire = "support@://whatsapp.com";
+            const mailtoLink = "mailto:" + emailDestinataire +
+                "?subject=" + encodeURIComponent(subject) +
+                "&body=" + encodeURIComponent(message);
+
+            window.location.href = mailtoLink;
         }
     </script>
 </body>
-</html>
+    </html>
+    
