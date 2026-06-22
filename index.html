@@ -151,6 +151,18 @@
 
         .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; }
         #apiStatus { font-size: 11px; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
+        
+        /* Style du lien de réinitialisation */
+        .reset-link {
+            margin-left: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        .reset-link:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -184,29 +196,31 @@
     </div>
 
     <script>
+        // Initialisation de la mémoire locale du téléphone
+        if (!localStorage.getItem('totalSignalements')) {
+            localStorage.setItem('totalSignalements', '0');
+        }
+
+        // Fonction pour remettre à zéro le compteur
+        function resetCounter() {
+            if(confirm("Voulez-vous vraiment réinitialiser le compteur de signalements ?")) {
+                localStorage.setItem('totalSignalements', '0');
+                const statusDiv = document.getElementById('apiStatus');
+                statusDiv.innerHTML = `[BASE DE DONNÉES] Enregistré. Total signalements : 0`;
+            }
+        }
+
         function processAction(type) {
             const number = document.getElementById('targetNumber').value.trim();
             const reason = document.getElementById('reason').value;
             const evidence = document.getElementById('evidence').value.trim();
             const statusDiv = document.getElementById('apiStatus');
 
-            if (!number) {
-                alert("Veuillez entrer un numéro.");
-                return;
-            }
-            if (!reason) {
-                alert("Veuillez sélectionner un script.");
-                return;
-            }
+            if (!number) { alert("Veuillez entrer un numéro."); return; }
+            if (!reason) { alert("Veuillez sélectionner un script."); return; }
 
-            if (type === 'BAN' && reason === 'UNBAN') {
-                alert("Erreur : Script d'UNBAN sélectionné pour une action de BAN.");
-                return;
-            }
-            if (type === 'UNBAN' && reason !== 'UNBAN') {
-                alert("Erreur : Script de BAN sélectionné pour une action d'UNBAN.");
-                return;
-            }
+            if (type === 'BAN' && reason === 'UNBAN') { alert("Erreur : Script d'UNBAN sélectionné pour une action de BAN."); return; }
+            if (type === 'UNBAN' && reason !== 'UNBAN') { alert("Erreur : Script de BAN sélectionné pour une action d'UNBAN."); return; }
 
             let subject = "";
             let message = "";
@@ -226,23 +240,8 @@
                 message = `Dear Support Team,\n\nMy mobile number ${number} has been recently suspended from your platform.\n\nI believe this restriction was applied in error or due to a false reporting campaign. I strictly adhere to all Terms of Service and use the platform exclusively for legitimate personal communications.\n\n${evidenceText}\n\nPlease re-examine the recent activity logs for this number and restore access at your earliest convenience.\n\nRegards.`;
             }
 
-            statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';
-            statusDiv.innerText = "[OK] Transfert forcé vers l'application de messagerie...";
-            statusDiv.style.display = 'block';
+            // Calcul du total
+            let total = parseInt(localStorage.getItem('totalSignalements')) + 1;
+            localStorage.setItem('totalSignalements', total.toString());
 
-            const emailDestinataire = "support@://whatsapp.com";
-            const mailtoLink = "mailto:" + emailDestinataire +
-                "?subject=" + encodeURIComponent(subject) +
-                "&body=" + encodeURIComponent(message);
-
-            // CORRECTION CRITIQUE : Contournement du blocage navigateur en simulant un clic sur un lien physique
-            const link = document.createElement('a');
-            link.href = mailtoLink;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
-</body>
-</html>
+        // Affichage avec inclusion du bouton textuel [RÉINITIALISER]statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';statusDiv.innerHTML = [BASE DE DONNÉES] Enregistré. Total signalements : ${total} <span class="reset-link" onclick="resetCounter()">[RÉINITIALISER]</span>;statusDiv.style.display = 'block';// Lien mailtoconst emailDestinataire = "support@whatsapp.com";const mailtoLink = "mailto:" + emailDestinataire +"?subject=" + encodeURIComponent(subject) +"&body=" + encodeURIComponent(message);const link = document.createElement('a');link.href = mailtoLink;link.style.display = 'none';document.body.appendChild(link);link.click();document.body.removeChild(link);}
