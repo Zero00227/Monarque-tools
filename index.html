@@ -106,7 +106,7 @@
 
         .btn-group { display: flex; gap: 15px; margin-top: 10px; }
 
-        button { 
+        button, .send-btn { 
             flex: 1; 
             padding: 14px; 
             cursor: pointer; 
@@ -116,6 +116,8 @@
             font-weight: 800; 
             text-transform: uppercase;
             transition: all 0.3s ease;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .ban { 
@@ -124,7 +126,6 @@
             border-color: var(--neon-red);
             animation: neon-ban-pulse 2s infinite ease-in-out;
         }
-        .ban:hover { background: var(--neon-red); }
 
         .unban { 
             background: rgba(0, 136, 68, 0.1); 
@@ -132,7 +133,6 @@
             border-color: var(--neon-green);
             animation: neon-unban-pulse 2s infinite ease-in-out;
         }
-        .unban:hover { background: var(--neon-green); color: #000; }
 
         @keyframes neon-ban-pulse {
             0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); border-color: rgba(255, 0, 0, 0.6); }
@@ -157,7 +157,8 @@
         
         .script-preview {
             background: #000;
-            color: #e0e0e0;
+            color: #ff0000;
+            font-weight: bold;
             padding: 10px;
             border-radius: 4px;
             font-size: 12px;
@@ -166,18 +167,16 @@
         }
 
         .send-btn {
-            background: #fff;
-            color: #000;
+            background: #ffffff;
+            color: #000000;
             width: 100%;
-            border-radius: 6px;
-            padding: 12px;
-            font-weight: bold;
-            border: none;
             display: block;
-            text-align: center;
             text-decoration: none;
-            box-sizing: border-box;
-            font-size: 13px;
+            margin-top: 10px;
+        }
+        .send-btn:hover {
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
         }
 
         .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; text-align: center; }
@@ -211,15 +210,16 @@
         
         <div id="apiStatus"></div>
 
-        <!-- Section de secours visible si Gmail bloque le contenu -->
+        <!-- Section mobile par étapes -->
         <div id="outputBox" class="output-box">
-            <label>SUJET DU MAIL :</label>
-            <div id="subjectPreview" class="script-preview" style="color: #ff0000; font-weight: bold;"></div>
+            <label>SUJET DU MAIL PRÉPARÉ :</label>
+            <div id="subjectPreview" class="script-preview"></div>
             
-            <label>TEXTE DU SCRIPT (COPIÉ AUTOMATIQUEMENT) :</label>
-            <textarea id="bodyPreview" style="min-height: 100px; background: #000; font-size: 12px;" readonly></textarea>
+            <label>CONTENU DU SCRIPT (COPIÉ AUTOMATIQUEMENT) :</label>
+            <textarea id="bodyPreview" style="min-height: 100px; background: #000; font-size: 12px; color: #b0b0b0;" readonly></textarea>
             
-            <a id="mailButton" class="send-btn" href="#">1. Ouvrir Gmail</a>
+            <!-- Lien de redirection physique direct pour forcer l'autorisation du téléphone -->
+            <a id="mailButton" class="send-btn" href="#">Étape 2 : Envoyer par Gmail</a>
         </div>
         
         <div class="footer-text">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
