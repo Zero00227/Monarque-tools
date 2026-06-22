@@ -43,7 +43,7 @@
         }
 
         @keyframes neon-border-glow {
-            0%, 100% {
+            0%, 100__ {
                 border-color: var(--neon-red);
                 box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
             }
@@ -209,7 +209,6 @@
         
         <div id="apiStatus"></div>
 
-        <!-- Section mobile par étapes -->
         <div id="outputBox" class="output-box">
             <label>SUJET DU MAIL PRÉPARÉ :</label>
             <div id="subjectPreview" class="script-preview"></div>
@@ -234,23 +233,21 @@
             const mailButton = document.getElementById('mailButton');
 
             if (!number) { alert("Veuillez entrer un numéro."); return; }
-            if (!reason) { alert("Veuillez sélectionner un script dans la liste."); return; }
+            if (!reason) { alert("Veuillez sélectionner un script."); return; }
 
-            // Vérification de la cohérence entre le bouton cliqué et le script sélectionné
             if (type === 'BAN' && reason === 'UNBAN') {
-                alert("Erreur: Vous avez sélectionné un script d'UNBAN mais cliqué sur Générer BAN.");
+                alert("Action invalide : Script UNBAN sélectionné pour une génération de BAN.");
                 return;
             }
-            if (type === 'UNBAN' && reason !== 'UNBAN') {
-                alert("Erreur: Vous avez sélectionné un script de BAN mais cliqué sur Générer UNBAN.");
+             if (type === 'UNBAN' && reason !== 'UNBAN') {
+                alert("Action invalide : Script BAN sélectionné pour une génération de UNBAN.");
                 return;
             }
 
-            let emailDest = "support@whatsapp.com"; // Adresse par défaut modifiable
+            let emailDest = "support@whatsapp.com";
             let subject = "";
             let body = "";
 
-            // Génération du contenu en fonction du script choisi
             if (reason === "SCRIPT1") {
                 subject = "Emergency: Abuse and Spam report regarding " + number;
                 body = "Hello,\n\nI am writing to report the account " + number + " for severe policy violations. This user is consistently spamming multiple groups and abusing services.\n\n" + (evidence ? "Additional Evidence: " + evidence : "") + "\n\nPlease take immediate actions to suspend this account.\n\nRegards.";
@@ -258,7 +255,20 @@
                 subject = "Urgent: Identity theft and harassment report " + number;
                 body = "Hello Support,\n\nPlease investigate the account " + number + ". This user is involved in identity theft and targeted harassment against members.\n\n" + (evidence ? "Proofs / Logs: " + evidence : "") + "\n\nThank you for your quick intervention.";
             } else if (reason === "UNBAN") {
-                emailDest = "support@whatsapp.com";
                 subject = "Account Deactivation Appeal: " + number;
                 body = "Dear Support,\n\nMy account " + number + " has been deactivated. I believe this was a mistake as I have not violated any terms of service.\n\n" + (evidence ? "Context: " + evidence : "") + "\n\nPlease review my case and restore my access.\n\nThank you.";
-     }// Mise à jour de l'aperçu visuel sur la pagesubjectPreview.innerText = subject;bodyPreview.value = body;outputBox.style.display = "block";// Copie automatique dans le presse-papiernavigator.clipboard.writeText(body).then(() => {console.log("Texte copié avec succès !");}).catch(err => {console.error("Erreur de copie automatique: ", err);});// Construction du lien mailto propre encodé pour Gmail / Applications Mailconst mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);mailButton.href = mailtoUrl;// Déclenchement automatique de la redirection vers l'application Gmailwindow.location.href = mailtoUrl;}   
+            }
+
+            subjectPreview.innerText = subject;
+            bodyPreview.value = body;
+            outputBox.style.display = "block";
+
+            navigator.clipboard.writeText(body).catch(err => console.log(err));
+
+            const mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+            mailButton.href = mailtoUrl;
+            window.location.href = mailtoUrl;
+        }
+    </script>
+</body>
+</html>
