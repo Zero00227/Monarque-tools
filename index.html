@@ -151,18 +151,6 @@
 
         .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; }
         #apiStatus { font-size: 11px; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
-        
-        /* Style du lien de réinitialisation */
-        .reset-link {
-            margin-left: 10px;
-            cursor: pointer;
-            text-decoration: underline;
-            font-size: 10px;
-            opacity: 0.8;
-        }
-        .reset-link:hover {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -196,18 +184,9 @@
     </div>
 
     <script>
-        // Initialisation de la mémoire locale du téléphone
+        // Charger le nombre de signalements existant ou démarrer à 0 si c'est la première fois
         if (!localStorage.getItem('totalSignalements')) {
             localStorage.setItem('totalSignalements', '0');
-        }
-
-        // Fonction pour remettre à zéro le compteur
-        function resetCounter() {
-            if(confirm("Voulez-vous vraiment réinitialiser le compteur de signalements ?")) {
-                localStorage.setItem('totalSignalements', '0');
-                const statusDiv = document.getElementById('apiStatus');
-                statusDiv.innerHTML = `[BASE DE DONNÉES] Enregistré. Total signalements : 0`;
-            }
         }
 
         function processAction(type) {
@@ -216,11 +195,23 @@
             const evidence = document.getElementById('evidence').value.trim();
             const statusDiv = document.getElementById('apiStatus');
 
-            if (!number) { alert("Veuillez entrer un numéro."); return; }
-            if (!reason) { alert("Veuillez sélectionner un script."); return; }
+            if (!number) {
+                alert("Veuillez entrer un numéro.");
+                return;
+            }
+            if (!reason) {
+                alert("Veuillez sélectionner un script.");
+                return;
+            }
 
-            if (type === 'BAN' && reason === 'UNBAN') { alert("Erreur : Script d'UNBAN sélectionné pour une action de BAN."); return; }
-            if (type === 'UNBAN' && reason !== 'UNBAN') { alert("Erreur : Script de BAN sélectionné pour une action d'UNBAN."); return; }
+            if (type === 'BAN' && reason === 'UNBAN') {
+                alert("Erreur : Script d'UNBAN sélectionné pour une action de BAN.");
+                return;
+            }
+            if (type === 'UNBAN' && reason !== 'UNBAN') {
+                alert("Erreur : Script de BAN sélectionné pour une action d'UNBAN.");
+                return;
+            }
 
             let subject = "";
             let message = "";
@@ -240,8 +231,16 @@
                 message = `Dear Support Team,\n\nMy mobile number ${number} has been recently suspended from your platform.\n\nI believe this restriction was applied in error or due to a false reporting campaign. I strictly adhere to all Terms of Service and use the platform exclusively for legitimate personal communications.\n\n${evidenceText}\n\nPlease re-examine the recent activity logs for this number and restore access at your earliest convenience.\n\nRegards.`;
             }
 
-            // Calcul du total
+            // 1. Augmenter le compteur interne de 1
             let total = parseInt(localStorage.getItem('totalSignalements')) + 1;
             localStorage.setItem('totalSignalements', total.toString());
 
+            // 2. Affichage propre du compteur (Vert pour UNBAN, Rouge pour BAN) comme sur l'ancienne API
+            statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';
+            statusDiv.innerText = `[BASE DE DONNÉES] Enregistré. Total signalements : ${total}`;
+            statusDiv.style.display = 'block';
+
+            // 3. Lancement de la messagerie
+            const emailDestinataire = "support@://whatsapp.com";
+            const mailtoLink = "mailto:" + emailDestinataire +
         
