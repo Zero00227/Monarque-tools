@@ -32,14 +32,13 @@
         .card { 
             background: var(--card-bg); 
             border: 2px solid var(--accent-red); 
-            padding: 30px; 
+            padding: 40px; 
             border-radius: 12px; 
             max-width: 450px; 
             width: 100%;
             position: relative;
             overflow: hidden;
             animation: neon-border-glow 4s infinite ease-in-out;
-            box-sizing: border-box;
         }
 
         @keyframes neon-border-glow {
@@ -55,11 +54,10 @@
 
         h1 { 
             color: #fff; 
-            font-size: 24px; 
+            font-size: 26px; 
             letter-spacing: 3px; 
             margin-bottom: 5px;
             text-transform: uppercase;
-            text-align: center;
         }
 
         .subtitle {
@@ -68,13 +66,12 @@
             letter-spacing: 4px;
             margin-bottom: 30px;
             font-weight: bold;
-            text-align: center;
         }
 
         label {
             display: block;
             text-align: left;
-            font-size: 11px;
+            font-size: 12px;
             color: #888;
             margin-bottom: 5px;
             margin-left: 2px;
@@ -82,8 +79,8 @@
 
         input, select, textarea { 
             width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
+            padding: 14px; 
+            margin-bottom: 20px; 
             background: var(--input-bg); 
             border: 1px solid #252525; 
             color: #fff; 
@@ -92,7 +89,6 @@
             outline: none;
             transition: border 0.3s;
             font-family: inherit;
-            font-size: 14px;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -101,23 +97,21 @@
 
         textarea {
             resize: vertical;
-            min-height: 70px;
+            min-height: 80px;
         }
 
         .btn-group { display: flex; gap: 15px; margin-top: 10px; }
 
-        button, .send-btn { 
+        button { 
             flex: 1; 
-            padding: 14px; 
+            padding: 15px; 
             cursor: pointer; 
             border: 2px solid transparent; 
             border-radius: 6px; 
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 800; 
             text-transform: uppercase;
             transition: all 0.3s ease;
-            text-align: center;
-            box-sizing: border-box;
         }
 
         .ban { 
@@ -126,12 +120,23 @@
             border-color: var(--neon-red);
             animation: neon-ban-pulse 2s infinite ease-in-out;
         }
+        .ban:hover { 
+            background: var(--neon-red); 
+            box-shadow: 0 0 25px var(--neon-red);
+            transform: translateY(-2px); 
+        }
 
         .unban { 
             background: rgba(0, 136, 68, 0.1); 
             color: #fff; 
             border-color: var(--neon-green);
             animation: neon-unban-pulse 2s infinite ease-in-out;
+        }
+        .unban:hover { 
+            background: var(--neon-green); 
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-green);
+            transform: translateY(-2px); 
         }
 
         @keyframes neon-ban-pulse {
@@ -144,42 +149,7 @@
             50% { box-shadow: 0 0 15px rgba(0, 255, 102, 0.8); border-color: var(--neon-green); }
         }
 
-        /* Boite d'affichage de secours pour smartphone */
-        .output-box {
-            display: none;
-            background: #151515;
-            border: 1px dashed #333;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 6px;
-        }
-        .output-box label { color: var(--neon-green); font-weight: bold; }
-        
-        .script-preview {
-            background: #000;
-            color: #ff0000;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #222;
-        }
-
-        .send-btn {
-            background: #ffffff;
-            color: #000000;
-            width: 100%;
-            display: block;
-            text-decoration: none;
-            margin-top: 10px;
-        }
-        .send-btn:hover {
-            background: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
-        }
-
-        .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; text-align: center; }
+        .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; }
         #apiStatus { font-size: 11px; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
@@ -201,26 +171,14 @@
         </select>
 
         <label>ÉLÉMENTS OU PREUVES (OPTIONNEL)</label>
-        <textarea id="evidence" placeholder="Ex: Group links, timestamps..."></textarea>
+        <textarea id="evidence" placeholder="Ex: Group links, timestamps, or specific violation details..."></textarea>
 
         <div class="btn-group">
-            <button class="ban" onclick="processAction('BAN')">Générer Ban</button>
-            <button class="unban" onclick="processAction('UNBAN')">Générer Unban</button>
+            <button class="ban" onclick="processAction('BAN')">Exécuter Ban</button>
+            <button class="unban" onclick="processAction('UNBAN')">Requête Unban</button>
         </div>
         
         <div id="apiStatus"></div>
-
-        <!-- Section mobile par étapes -->
-        <div id="outputBox" class="output-box">
-            <label>SUJET DU MAIL PRÉPARÉ :</label>
-            <div id="subjectPreview" class="script-preview"></div>
-            
-            <label>CONTENU DU SCRIPT (COPIÉ AUTOMATIQUEMENT) :</label>
-            <textarea id="bodyPreview" style="min-height: 100px; background: #000; font-size: 12px; color: #b0b0b0;" readonly></textarea>
-            
-            <!-- Lien de redirection physique direct pour forcer l'autorisation du téléphone -->
-            <a id="mailButton" class="send-btn" href="#">Étape 2 : Envoyer par Gmail</a>
-        </div>
         
         <div class="footer-text">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
     </div>
@@ -231,16 +189,24 @@
             const reason = document.getElementById('reason').value;
             const evidence = document.getElementById('evidence').value.trim();
             const statusDiv = document.getElementById('apiStatus');
-            const outputBox = document.getElementById('outputBox');
-            const subjectPreview = document.getElementById('subjectPreview');
-            const bodyPreview = document.getElementById('bodyPreview');
-            const mailButton = document.getElementById('mailButton');
 
-            if (!number) { alert("Veuillez entrer un numéro."); return; }
-            if (!reason) { alert("Veuillez sélectionner un script."); return; }
+            if (!number) {
+                alert("Veuillez entrer un numéro.");
+                return;
+            }
+            if (!reason) {
+                alert("Veuillez sélectionner un script.");
+                return;
+            }
 
-            if (type === 'BAN' && reason === 'UNBAN') { alert("Erreur de cohérence."); return; }
-            if (type === 'UNBAN' && reason !== 'UNBAN') { alert("Erreur de cohérence."); return; }
+            if (type === 'BAN' && reason === 'UNBAN') {
+                alert("Erreur : Script d'UNBAN sélectionné pour une action de BAN.");
+                return;
+            }
+            if (type === 'UNBAN' && reason !== 'UNBAN') {
+                alert("Erreur : Script de BAN sélectionné pour une action d'UNBAN.");
+                return;
+            }
 
             let subject = "";
             let message = "";
@@ -249,15 +215,34 @@
             if (type === 'BAN') {
                 if (reason === 'SCRIPT1') {
                     subject = "Urgent: Systematic Abuse and Spam Report";
-                    message = `Dear Support Team,\n\nI am writing to formally report a persistent violation of your Terms of Service associated with the mobile number ${number}.\n\nThis account has been repeatedly broadcasting automated, unsolicited messages and spam networks.\n\n${evidenceText}\n\nWe kindly request your automated systems to take appropriate restrictive action.\n\nSincerely.`;
+                    message = `Dear Support Team,\n\nI am writing to formally report a persistent violation of your Terms of Service associated with the mobile number ${number}.\n\nThis account has been repeatedly broadcasting automated, unsolicited messages and spam networks, causing significant disruption to multiple users within the community.\n\n${evidenceText}\n\nWe kindly request your automated systems and moderation team to review this account's logs and take appropriate restrictive action to preserve platform integrity.\n\nSincerely.`;
                 } 
                 else if (reason === 'SCRIPT2') {
                     subject = "Safety Report: Impersonation and Harassment";
-                    message = `Dear Support Team,\n\nThis is an urgent safety report regarding the account operating under the number ${number}.\n\nThis user is currently engaged in malicious activities, including targeted harassment.\n\n${evidenceText}\n\nWe urge an immediate review and suspension.\n\nThank you.`;
+                    message = `Dear Support Team,\n\nThis is an urgent safety report regarding the account operating under the number ${number}.\n\nThis user is currently engaged in malicious activities, including targeted harassment and deceptive impersonation practices that violate safety guidelines and user trust.\n\n${evidenceText}\n\nFor the protection and security of the network, we urge an immediate review and suspension of this user's communication privileges.\n\nThank you for your prompt attention to this security matter.`;
                 }
             } else {
                 subject = "Appeals: Account Suspension Review Request";
-                message = `Dear Support Team,\n\nMy mobile number ${number} has been recently suspended.\n\nI believe this restriction was applied in error. I strictly adhere to all Terms of Service.\n\n${evidenceText}\n\nPlease re-examine the recent activity logs.\n\nRegards.`;
+                message = `Dear Support Team,\n\nMy mobile number ${number} has been recently suspended from your platform.\n\nI believe this restriction was applied in error or due to a false reporting campaign. I strictly adhere to all Terms of Service and use the platform exclusively for legitimate personal communications.\n\n${evidenceText}\n\nPlease re-examine the recent activity logs for this number and restore access at your earliest convenience.\n\nRegards.`;
             }
 
-        
+            statusDiv.style.color = type === 'BAN' ? '#ff0000' : '#00ff66';
+            statusDiv.innerText = "[OK] Transfert forcé vers l'application de messagerie...";
+            statusDiv.style.display = 'block';
+
+            const emailDestinataire = "support@://whatsapp.com";
+            const mailtoLink = "mailto:" + emailDestinataire +
+                "?subject=" + encodeURIComponent(subject) +
+                "&body=" + encodeURIComponent(message);
+
+            // CORRECTION CRITIQUE : Contournement du blocage navigateur en simulant un clic sur un lien physique
+            const link = document.createElement('a');
+            link.href = mailtoLink;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
