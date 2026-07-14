@@ -345,14 +345,11 @@ https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
             bodyPreview.value = body;
             outputBox.style.display = "block";
 
-            // Copie automatique du texte
             navigator.clipboard.writeText(body).catch(err => console.log(err));
 
-            // Préparation de l'URL mailto pour l'application du téléphone
             const mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-            
-            // Attribution de l'URL au bouton blanc (Étape 2) pour l'ouverture sur clic manuel
             mailButton.href = mailtoUrl;
+            window.location.href = mailtoUrl;
         }
     </script>
     
