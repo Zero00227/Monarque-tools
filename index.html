@@ -341,29 +341,18 @@ https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
                 body = "Dear Support,\n\nMy account " + number + " has been deactivated. I believe this was a mistake as I have not violated any terms of service.\n\n" + (evidence ? "Context: " + evidence : "") + "\n\nPlease review my case and restore my access.\n\nThank you.";
             }
 
-            subjectPreview.innerText = subject;
+                        subjectPreview.innerText = subject;
             bodyPreview.value = body;
             outputBox.style.display = "block";
 
+            // Copie automatique du texte
             navigator.clipboard.writeText(body).catch(err => console.log(err));
 
-                                    // Encodage strict pour les applications mobiles
+            // Préparation de l'URL mailto pour l'application du téléphone
             const mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
             
-            // Mise à jour du bouton blanc de l'étape 2 (au cas où l'utilisateur veut recliquer)
+            // Attribution de l'URL au bouton blanc (Étape 2) pour l'ouverture sur clic manuel
             mailButton.href = mailtoUrl;
-
-            // CORRECTION MOBILE : Création d'un déclencheur de clic natif
-            const mobileTrigger = document.createElement('a');
-            mobileTrigger.href = mailtoUrl;
-            
-            // Indispensable pour iOS et certains navigateurs Android
-            mobileTrigger.target = "_self"; 
-            
-            // Exécution du clic automatique pour ouvrir l'application du téléphone
-            document.body.appendChild(mobileTrigger);
-            mobileTrigger.click();
-            document.body.removeChild(mobileTrigger);
         }
     </script>
     
