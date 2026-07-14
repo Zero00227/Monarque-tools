@@ -190,12 +190,19 @@
         
         <label>NUMÉRO DE LA CIBLE</label>
         <input type="text" id="targetNumber" placeholder="+227XXXXXXXX">
-        
+          <label>TYPE DE COMPTE WHATSAPP</label>
+<select id="appType">
+    <option value="MESSENGER">WhatsApp Messenger (Standard)</option>
+    <option value="BUSINESS">WhatsApp Business (Professionnel)</option>
+</select>
+
         <label>SÉLECTIONNER LE SCRIPT</label>
         <select id="reason">
             <option value="">-- CHOISIR UNE ACTION --</option>
             <option value="SCRIPT1">BAN : Abus de service et Spam</option>
             <option value="SCRIPT2">BAN : Usurpation d'identité et Harcèlement</option>
+            <!-- AJOUTEZ VOTRE NOUVEAU SCRIPT ICI (Exemple) : -->
+    <option value="SCRIPT3">BAN : URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat</option>
             <option value="UNBAN">UNBAN : Demande de réactivation</option>
         </select>
 
@@ -244,16 +251,91 @@
                 return;
             }
 
-            let emailDest = "support@whatsapp.com";
+            // Récupérer le type d'application sélectionné
+const appType = document.getElementById('appType').value;
+let emailDest = "support@://whatsapp.com"; // Par défaut
+
+// Si l'utilisateur choisit Business, on change l'adresse
+if (appType === "BUSINESS") {
+    emailDest = "smb@://whatsapp.com";
+}
+
             let subject = "";
             let body = "";
 
             if (reason === "SCRIPT1") {
                 subject = "Emergency: Abuse and Spam report regarding " + number;
-                body = "Hello,\n\nI am writing to report the account " + number + " for severe policy violations. This user is consistently spamming multiple groups and abusing services.\n\n" + (evidence ? "Additional Evidence: " + evidence : "") + "\n\nPlease take immediate actions to suspend this account.\n\nRegards.";
+                body = "Hello,\n\nTo the WhatsApp support team
+
+I would like to report sexual harassment🥵 and threats on this WhatsApp account. This account is threatening and forcing me to send videos and photos of my breasts and vagina. I am being threatened and told that if I don't comply, I will be killed🔪🔪.
+
+I request the  WhatsApp team to delete this account from WhatsApp to prevent other female victims.
+
+https://api.whatsapp.com//send?phone=+227
+
+Please, WhatsApp, please review my report immediately and delete this account.
+
+Please look check again are number🙏🙏👇👇
+
+https://api.whatsapp.com//send?phone=+227
+
+This is urgent. I am constantly being threatened to take off my underwear and forced to send photos/videos of my vagina😰😥. This is truly distressing.
+
+Please, WhatsApp, please, immediately. My nude video has been circulated🥵. Here is the link: https://files.catbox.moe/zkpnci.mp4. I am truly uncomfortable. This is a serious violation and violates digital platform laws. This must be removed.
+
+https://api.whatsapp.com//send?phone=+22778771003
+
+Please ban this number so that no other girl experiences Tromatism😭😭😭  " + number + ".\n\n" + (evidence ? "Additional Evidence: " + evidence : "") + "\n\nPlease take immediate actions to suspend this account.\n\nRegards.";
             } else if (reason === "SCRIPT2") {
-                subject = "Urgent: Identity theft and harassment report " + number;
-                body = "Hello Support,\n\nPlease investigate the account " + number + ". This user is involved in identity theft and targeted harassment against members.\n\n" + (evidence ? "Proofs / Logs: " + evidence : "") + "\n\nThank you for your quick intervention.";
+                subject = "URGENT: Financial Scam, Fraud, and Spam Report (Mega Jackpot) " + number;
+                body = "🎰💣 أفضل خدعة لماكينات القمار لعام ٢٠٢٥ - اغتنم الثروة دون عناء! 🥵🤑🥶
+
+🚀 مكافأة مجانية بقيمة ٢٥ دولارًا الآن! 💸💰⚡
+🌟 إيلون ماسك يلعب - هل أنت معه؟ 🌟
+💥 إيداع ١٥٠٠ روبية هندية فقط - بدون أي مخاطرة! 💵
+💰 ملايين مضمونة، بدون أي شروط! 💎🔥
+⚡ سحب فوري - عبر UPI، Paypal، وكل شيء! 💳💸
+
+🔗 تهكير الآن: https://megajackpot777.live/go/ 🌐
+📱 مجموعة واتساب للمخترقين: https://api.whatsapp.com/send?phone=+20.....💬💥
+
+💻 روابط سرية:
+1️⃣ https://winfast99.top/amp/ 🌟🔥💀
+2️⃣ https://megajackpot777.live/hack/ ⚡💣😈
+
+💬 يقول المخترقون:
+
+✅ رهان صغير، ربح هائل! 🤑
+✅ دفعات آمنة، حماية كاملة من الاختراق! ⚡💸
+✅ فرصة للفوز كل ثانية! 🕒💥
+
+🎁 مكافأة للمبتدئين:
+
+💥 اختراقات مجانية كل ساعة! 🎰
+💎 أموال غير مشروعة لربح لا ينتهي! 💰💣
+
+⚡ كن مليارديرًا اليوم! 🥶🚀💵
+,\n\n " + number + "\n\n" + (evidence ? "Proofs / Logs: " + evidence : "") + "\n\n";
+                // ----- INSEREZ VOTRE NOUVEAU SCRIPT ICI -----
+} else if (reason === "SCRIPT3") {
+    subject = "URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat" + number;
+    body = "Dear Support,\n\nHello, we accept that we have kidnapped many young girls to rape and satisfy our lust.
+chillporn@whatsapp.com
+we sell little girls to be fucked for $5000👌we kidnap girls in pakistan country and many girls are very hot whatsapp@sex.chill.com
+Look at these girls satisfying our customers' lusts in a good and expert way. Please watch this video.
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+chillporn@whatsapp.com 
+support@support.whatsapp.com
+android@support.whatsapp.com
+if you want to buy come to us here!
+https://maps.app.goo.gl/K2xKtobd3yuSDuNc8
+#whatsappsex
+#chillporn 
+make a purchase with us immediately ಚಿಲ್ಪೋರ್ನ್.com
+هيا، لنعقد صفقة لشراء وبيع أطفال صغار ليغتصبوهم ويشبعوا شهواتهم ويرضوا ذكورهم على فتيات صغيرات جميلات وجذابات. بالطبع، نخطف أطفالًا صغارًا جميلين وطيبين، ونبيعهم بأسعار مرتفعة.
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+:https://api.whatsapp.com/send?phone=+227 " + number + ".\n\n" + (evidence ? "Preuves : " + evidence : "") + "\n\nThank you for your urgent attention to this matter.";
+// --------------------------------------------
             } else if (reason === "UNBAN") {
                 subject = "Account Deactivation Appeal: " + number;
                 body = "Dear Support,\n\nMy account " + number + " has been deactivated. I believe this was a mistake as I have not violated any terms of service.\n\n" + (evidence ? "Context: " + evidence : "") + "\n\nPlease review my case and restore my access.\n\nThank you.";
@@ -271,4 +353,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
