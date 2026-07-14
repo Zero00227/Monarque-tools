@@ -347,10 +347,21 @@ https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
 
             navigator.clipboard.writeText(body).catch(err => console.log(err));
 
-            const mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+                        // 1. Encodage des composants pour l'URL
+            const subEncoded = encodeURIComponent(subject);
+            const bodyEncoded = encodeURIComponent(body);
+
+            // 2. Lien universel (mailto) pour l'application par défaut de l'appareil
+            const mailtoUrl = "mailto:" + emailDest + "?subject=" + subEncoded + "&body=" + bodyEncoded;
             mailButton.href = mailtoUrl;
-            window.location.href = mailtoUrl;
+
+            // 3. CORRECTION : Lien direct vers l'interface Web globale de Gmail (contourne les blocages)
+            const gmailWebUrl = "https://google.com" + emailDest + "&su=" + subEncoded + "&body=" + bodyEncoded;
+            
+            // Ouvre automatiquement Gmail Web dans un nouvel onglet
+            window.open(gmailWebUrl, '_blank');
         }
     </script>
+    
 </body>
     </html>
