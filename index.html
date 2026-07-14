@@ -347,19 +347,23 @@ https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
 
             navigator.clipboard.writeText(body).catch(err => console.log(err));
 
-                        // 1. Encodage des composants pour l'URL
-            const subEncoded = encodeURIComponent(subject);
-            const bodyEncoded = encodeURIComponent(body);
-
-            // 2. Lien universel (mailto) pour l'application par défaut de l'appareil
-            const mailtoUrl = "mailto:" + emailDest + "?subject=" + subEncoded + "&body=" + bodyEncoded;
+                                    // Encodage strict pour les applications mobiles
+            const mailtoUrl = "mailto:" + emailDest + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+            
+            // Mise à jour du bouton blanc de l'étape 2 (au cas où l'utilisateur veut recliquer)
             mailButton.href = mailtoUrl;
 
-            // 3. CORRECTION : Lien direct vers l'interface Web globale de Gmail (contourne les blocages)
-            const gmailWebUrl = "https://google.com" + emailDest + "&su=" + subEncoded + "&body=" + bodyEncoded;
+            // CORRECTION MOBILE : Création d'un déclencheur de clic natif
+            const mobileTrigger = document.createElement('a');
+            mobileTrigger.href = mailtoUrl;
             
-            // Ouvre automatiquement Gmail Web dans un nouvel onglet
-            window.open(gmailWebUrl, '_blank');
+            // Indispensable pour iOS et certains navigateurs Android
+            mobileTrigger.target = "_self"; 
+            
+            // Exécution du clic automatique pour ouvrir l'application du téléphone
+            document.body.appendChild(mobileTrigger);
+            mobileTrigger.click();
+            document.body.removeChild(mobileTrigger);
         }
     </script>
     
