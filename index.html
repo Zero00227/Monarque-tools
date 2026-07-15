@@ -219,10 +219,11 @@
         <div id="outputBox" class="output-box">
             <label>SUJET DU MAIL PRÉPARÉ :</label>
             <div id="subjectPreview" class="script-preview"></div>
+            
             <label>CONTENU DU SCRIPT (COPIÉ AUTOMATIQUEMENT) :</label>
             <textarea id="bodyPreview" style="min-height: 100px; background: #000; font-size: 12px; color: #b0b0b0;" readonly></textarea>
             
-            <a id="mailButton" class="send-btn" href="#" target="_blank">Étape 2 : Envoyer par Gmail</a>
+            <a id="mailButton" class="send-btn" href="#">Étape 2 : Envoyer par Gmail</a>
         </div>
         
         <div class="footer-text">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
@@ -280,9 +281,9 @@
 
             navigator.clipboard.writeText(body).catch(err => console.log(err));
 
-            const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(emailDest) + "&su=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-            mailButton.href = gmailUrl;
-            window.open(gmailUrl, '_blank');
+            const mailtoUrl = "mailto:" + encodeURIComponent(emailDest) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+            mailButton.href = mailtoUrl;
+            window.location.href = mailtoUrl;
         }
     </script>
     
