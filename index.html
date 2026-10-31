@@ -1,291 +1,816 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONARQUE TOOLS - DARK JUSTICE</title>
-    <style>
-        :root {
-            --bg-color: #0a0a0a;
-            --card-bg: #121212;
-            --accent-red: #cc0000;
-            --accent-green: #008844;
-            --border-color: #222;
-            --text-main: #e0e0e0;
-            --input-bg: #181818;
-            --neon-red: #ff0000;
-            --neon-green: #00ff66;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONARQUE TOOLS — DARK JUSTICE</title>
+<style>
+:root{
+  --bg:#03060f;--panel:#070d1a;--panel-2:#0a1222;--line:#12294d;
+  --neon:#00a2ff;--cyan:#00e5ff;--red:#ff1f3d;--green:#00ff9d;
+  --text:#cfe3ff;--dim:#6a86ad;--amber:#ffb020;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, #062040 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, #0a1a35 0%, transparent 55%),
+    var(--bg);
+  color:var(--text);font-family:'Inter','Segoe UI',Roboto,sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:20px;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,162,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,162,255,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(ellipse at center,#000 20%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 20%,transparent 80%);
+}
+.hidden{display:none!important}
 
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
+#lock{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,#07213f 0%,#03060f 65%)}
+.lock-card{width:100%;max-width:370px;background:var(--panel);border:1.5px solid var(--neon);border-radius:16px;padding:34px 24px;text-align:center;animation:edge 3.6s infinite ease-in-out}
+@keyframes edge{
+  0%,100%{border-color:rgba(0,162,255,.45);box-shadow:0 0 18px rgba(0,162,255,.18),inset 0 0 22px rgba(0,162,255,.05)}
+  50%{border-color:rgba(0,229,255,.95);box-shadow:0 0 40px rgba(0,162,255,.55),inset 0 0 32px rgba(0,162,255,.14)}
+}
+.lock-glyph{font-size:46px;color:var(--cyan);line-height:1;text-shadow:0 0 10px var(--neon),0 0 28px rgba(0,162,255,.7);animation:flicker 5s infinite}
+@keyframes flicker{
+  0%,17%,21%,24%,52%,56%,100%{opacity:1;text-shadow:0 0 10px var(--neon),0 0 28px rgba(0,162,255,.75),0 0 55px rgba(0,162,255,.45)}
+  19%,23%,54%{opacity:.45;text-shadow:0 0 4px var(--neon)}
+}
+.lock-card h1{color:#fff;font-size:19px;letter-spacing:4px;margin:14px 0 4px;text-transform:uppercase}
+.lock-sub{font-size:9.5px;color:var(--dim);letter-spacing:3px;margin:0 0 24px;font-weight:700}
+#pass{width:100%;padding:14px;background:#050b16;border:1px solid var(--line);border-radius:8px;color:#fff;font-size:15px;letter-spacing:3px;text-align:center;outline:none;transition:.25s;font-family:inherit}
+#pass:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.35)}
+#unlock{width:100%;margin-top:14px;padding:14px;border:1.5px solid var(--cyan);border-radius:8px;background:rgba(0,162,255,.1);color:#fff;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.25s;font-family:inherit}
+#unlock:hover{background:var(--cyan);color:#001018;box-shadow:0 0 26px rgba(0,229,255,.7)}
+#lockMsg{min-height:18px;font-size:11px;letter-spacing:1.5px;font-weight:700;color:var(--red);margin:12px 0 0}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+.lock-foot{font-size:9.5px;color:#31527a;letter-spacing:2px;margin-top:20px}
 
-        .card { 
-            background: var(--card-bg); 
-            border: 2px solid var(--accent-red); 
-            padding: 30px; 
-            border-radius: 12px; 
-            max-width: 450px; 
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            animation: neon-border-glow 4s infinite ease-in-out;
-            box-sizing: border-box;
-        }
+.wrap{width:100%;max-width:490px;position:relative;z-index:2}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1.5px solid var(--neon);border-radius:14px;padding:26px 22px;position:relative;overflow:hidden;animation:edge 4s infinite ease-in-out}
+.card::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:sweep 3.5s linear infinite}
+@keyframes sweep{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(700px);opacity:0}}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:2px;color:#3b5f8a;margin-bottom:14px;font-weight:700}
+.led{color:var(--green);display:inline-flex;align-items:center;gap:5px}
+.led::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.4s steps(1) infinite}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.15}}
+h1.title{color:#fff;font-size:22px;letter-spacing:3.5px;margin:0 0 4px;text-align:center;text-transform:uppercase;animation:flicker 6s infinite}
+h1.title span{color:var(--cyan)}
+.sub{font-size:9px;color:#3b5f8a;letter-spacing:4px;margin-bottom:22px;font-weight:800;text-align:center}
+label{display:block;text-align:left;font-size:10px;letter-spacing:1.4px;color:var(--dim);margin-bottom:6px;margin-left:2px;font-weight:700;text-transform:uppercase}
+input,select,textarea{width:100%;padding:12px;margin-bottom:14px;background:#050b16;border:1px solid var(--line);color:#fff;border-radius:7px;outline:none;transition:.25s;font-family:inherit;font-size:13.5px}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.28)}
+select{appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+.row{display:flex;gap:12px;margin-top:4px}
+.btn{flex:1;padding:14px;cursor:pointer;border-radius:7px;border:1.5px solid transparent;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:transparent;color:#fff;transition:.25s;font-family:inherit}
+.ban{border-color:var(--red);background:rgba(255,31,61,.08);animation:pulseRed 2.2s infinite ease-in-out}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 6px rgba(255,31,61,.3);border-color:rgba(255,31,61,.55)}50%{box-shadow:0 0 22px rgba(255,31,61,.85);border-color:var(--red)}}
+.ban:hover{background:var(--red);color:#14020a}
+.unban{border-color:var(--green);background:rgba(0,255,157,.07);animation:pulseGreen 2.2s infinite ease-in-out}
+@keyframes pulseGreen{0%,100%{box-shadow:0 0 6px rgba(0,255,157,.3);border-color:rgba(0,255,157,.55)}50%{box-shadow:0 0 22px rgba(0,255,157,.8);border-color:var(--green)}}
+.unban:hover{background:var(--green);color:#00140c}
 
-        @keyframes neon-border-glow {
-            0%, 100% {
-                border-color: var(--neon-red);
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
-            }
-            50% {
-                border-color: var(--neon-green);
-                box-shadow: 0 0 20px rgba(0, 255, 102, 0.4), inset 0 0 10px rgba(0, 255, 102, 0.2);
-            }
-        }
+.panel{background:#060c17;border:1px solid #142b4d;border-radius:9px;padding:13px;margin-bottom:14px}
+.panel h3{margin:0 0 10px;font-size:10.5px;letter-spacing:1.6px;color:var(--cyan);text-transform:uppercase}
+.out{display:none;margin-top:18px;border-top:1px dashed #1b3459;padding-top:15px}
+.out label{color:var(--cyan)}
+.prev{background:#02060d;border:1px solid #142b4d;border-radius:6px;padding:10px;font-size:11.5px;color:var(--cyan);margin-bottom:11px;word-break:break-word;font-weight:700}
+#body{min-height:120px;background:#02060d;color:#9fc0e6;font-size:12px}
+.mini{display:flex;gap:8px;margin-top:4px}
+.mini button{flex:1;padding:11px;font-size:9.5px;letter-spacing:1.1px;font-weight:800;text-transform:uppercase;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--text);cursor:pointer;transition:.2s;font-family:inherit}
+.mini button:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.3)}
+.primary{display:block;width:100%;text-align:center;text-decoration:none;padding:15px;margin-top:10px;border:0;border-radius:7px;background:var(--cyan);color:#001019;font-weight:900;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;transition:.25s;font-family:inherit}
+.primary:hover{box-shadow:0 0 28px rgba(0,229,255,.8)}
+.ghost{display:block;width:100%;text-align:center;text-decoration:none;padding:12px;margin-top:8px;border:1px solid #1d3a63;border-radius:7px;background:#070f1d;color:var(--dim);font-weight:800;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:.2s}
+.ghost:hover{color:var(--cyan);border-color:var(--cyan)}
+.hint{font-size:10px;color:#3b5f8a;margin:8px 0 0;line-height:1.55}
+.hint b{color:#5b86bd}
+.batches{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.batches button{padding:9px 4px;font-size:9.5px;font-weight:800;letter-spacing:.6px;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--dim);cursor:pointer;font-family:inherit;transition:.2s}
+.batches button:hover{border-color:var(--cyan);color:var(--cyan)}
+.batches button.sel{background:rgba(0,162,255,.16);border-color:var(--cyan);color:#fff;box-shadow:0 0 14px rgba(0,229,255,.4)}
 
-        h1 { 
-            color: #fff; 
-            font-size: 24px; 
-            letter-spacing: 3px; 
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            text-align: center;
-        }
+.chk{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid #0e1e34;cursor:pointer}
+.chk:last-of-type{border-bottom:0}
+.chk input{appearance:none;width:17px;height:17px;flex:0 0 17px;margin:1px 0 0;background:#040a14;border:1.5px solid #22456e;border-radius:4px;cursor:pointer;transition:.2s;position:relative}
+.chk input:checked{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(0,255,157,.6)}
+.chk input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#00140c;font-size:12px;font-weight:900}
+.chk span{font-size:11px;line-height:1.45;color:#8fb0d6}
+.chk input:checked + span{color:#3f6a4f;text-decoration:line-through}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;background:#040a14;border:1px solid #142b4d;border-radius:7px;padding:9px 11px}
+.counter .lab{font-size:10px;letter-spacing:1px;color:var(--dim);font-weight:700;text-transform:uppercase}
+.counter .ctl{display:flex;align-items:center;gap:9px}
+.counter button{width:28px;height:28px;border-radius:6px;border:1px solid #1d3a63;background:#0a1424;color:#fff;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit;line-height:1}
+.counter button:hover{border-color:var(--cyan);color:var(--cyan)}
+#repCount{font-size:15px;font-weight:900;color:var(--green);min-width:26px;text-align:center}
+.bar{height:5px;background:#0d1c30;border-radius:3px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--green));transition:width .4s;box-shadow:0 0 12px var(--neon)}
+#scoreTxt{font-size:10px;letter-spacing:1px;color:var(--dim);margin-top:7px;font-weight:700}
+#scoreTxt b{color:var(--amber)}
 
-        .subtitle {
-            font-size: 10px;
-            color: #555;
-            letter-spacing: 4px;
-            margin-bottom: 30px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 5px;
-            margin-left: 2px;
-        }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            background: var(--input-bg); 
-            border: 1px solid #252525; 
-            color: #fff; 
-            border-radius: 6px; 
-            box-sizing: border-box;
-            outline: none;
-            transition: border 0.3s;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #444;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        .btn-group { display: flex; gap: 15px; margin-top: 10px; }
-
-        button, .send-btn { 
-            flex: 1; 
-            padding: 14px; 
-            cursor: pointer; 
-            border: 2px solid transparent; 
-            border-radius: 6px; 
-            font-size: 12px;
-            font-weight: 800; 
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .ban { 
-            background: rgba(204, 0, 0, 0.1); 
-            color: #fff; 
-            border-color: var(--neon-red);
-            animation: neon-ban-pulse 2s infinite ease-in-out;
-        }
-
-        .unban { 
-            background: rgba(0, 136, 68, 0.1); 
-            color: #fff; 
-            border-color: var(--neon-green);
-            animation: neon-unban-pulse 2s infinite ease-in-out;
-        }
-
-        @keyframes neon-ban-pulse {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); border-color: rgba(255, 0, 0, 0.6); }
-            50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); border-color: var(--neon-red); }
-        }
-
-        @keyframes neon-unban-pulse {
-            0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 102, 0.3); border-color: rgba(0, 255, 102, 0.6); }
-            50% { box-shadow: 0 0 15px rgba(0, 255, 102, 0.8); border-color: var(--neon-green); }
-        }
-
-        .output-box {
-            display: none;
-            background: #151515;
-            border: 1px dashed #333;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 6px;
-        }
-        .output-box label { color: var(--neon-green); font-weight: bold; }
-        
-        .script-preview {
-            background: #000;
-            color: #ff0000;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #222;
-            word-break: break-word;
-        }
-
-        .send-btn {
-            background: #ffffff;
-            color: #000000;
-            width: 100%;
-            display: block;
-            text-decoration: none;
-            margin-top: 10px;
-        }
-        .send-btn:hover {
-            background: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
-        }
-
-        .footer-text { font-size: 11px; color: #333; margin-top: 30px; font-style: italic; text-align: center; }
-        #apiStatus { font-size: 11px; text-align: center; margin-top: 15px; font-weight: bold; display: none; }
-    </style>
+.tools{display:flex;gap:8px;margin-top:14px}
+.tools button{flex:1;padding:11px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;background:#060d1a;border:1px solid #16304f;border-radius:6px;color:var(--dim);cursor:pointer;transition:.2s;font-family:inherit}
+.tools button:hover{color:var(--cyan);border-color:var(--cyan)}
+.tools button.on{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.4)}
+#status{font-size:11px;text-align:center;margin-top:12px;font-weight:700;letter-spacing:1px;color:var(--cyan);min-height:14px}
+.foot{font-size:10px;color:#2a476d;margin-top:20px;font-style:italic;text-align:center}
+details summary{font-size:10px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase;font-weight:800;cursor:pointer;padding:4px 0}
+details[open] summary{color:var(--cyan);margin-bottom:8px}
+@media (max-width:420px){.card{padding:20px 15px}h1.title{font-size:18px;letter-spacing:2px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important}}
+</style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>MONARQUE TOOLS</h1>
-        <div class="subtitle">SYSTEM ADMINISTRATION</div>
-        
-        <label>NUMÉRO DE LA CIBLE</label>
-        <input type="text" id="targetNumber" placeholder="+227XXXXXXXX">
-          <label>TYPE DE COMPTE WHATSAPP</label>
-<select id="appType">
-    <option value="MESSENGER">WhatsApp Messenger (Standard)</option>
-    <option value="BUSINESS">WhatsApp Business (Professionnel)</option>
-</select>
+<section id="lock">
+  <div class="lock-card" id="lockCard">
+    <div class="lock-glyph">♛</div>
+    <h1>Monarque Tools</h1>
+    <p class="lock-sub">Accès restreint</p>
+    <input id="pass" type="password" placeholder="••••••" autocomplete="current-password" autofocus>
+    <button id="unlock" type="button">Déverrouiller</button>
+    <p id="lockMsg"></p>
+    <div class="lock-foot">DARK JUSTICE SYSTEM</div>
+  </div>
+</section>
 
-        <label>SÉLECTIONNER LE SCRIPT</label>
-        <select id="reason">
-            <option value="">-- CHOISIR UNE ACTION --</option>
-            <option value="SCRIPT1">BAN : Abus de service et Spam</option>
-            <option value="SCRIPT2">BAN : Usurpation d'identité et Harcèlement</option>
-            <option value="SCRIPT3">BAN : URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat</option>
-            <option value="UNBAN">UNBAN : Demande de réactivation</option>
-        </select>
+<div class="wrap hidden" id="wrap">
+  <div class="card">
+    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.0</span></div>
 
-        <label>ÉLÉMENTS OU PREUVES (OPTIONNEL)</label>
-        <textarea id="evidence" placeholder="Ex: Group links, timestamps..."></textarea>
+    <h1 class="title">Monarque <span>Tools</span></h1>
+    <div class="sub">System Administration</div>
 
-        <div class="btn-group">
-            <button class="ban" onclick="processAction('BAN')">Générer Ban</button>
-            <button class="unban" onclick="processAction('UNBAN')">Générer Unban</button>
-        </div>
-        
-        <div id="apiStatus"></div>
-
-        <div id="outputBox" class="output-box">
-            <label>SUJET DU MAIL PRÉPARÉ :</label>
-            <div id="subjectPreview" class="script-preview"></div>
-            
-            <label>CONTENU DU SCRIPT (COPIÉ AUTOMATIQUEMENT) :</label>
-            <textarea id="bodyPreview" style="min-height: 100px; background: #000; font-size: 12px; color: #b0b0b0;" readonly></textarea>
-            
-            <a id="mailButton" class="send-btn" href="#">Étape 2 : Envoyer par Gmail</a>
-        </div>
-        
-        <div class="footer-text">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
+    <label for="number">Numéro de la cible</label>
+    <input id="number" type="text" placeholder="+227XXXXXXXX" inputmode="tel">
+    <p class="hint">La variable <b>{NUM}</b> est remplacée automatiquement. Format international obligatoire.</p>
+    <div class="mini" style="margin-bottom:14px">
+      <button type="button" id="openWa">Ouvrir la discussion</button>
+      <button type="button" id="openWaBiz">Version Business</button>
     </div>
 
-    <script>
-        function processAction(type) {
-            const number = document.getElementById('targetNumber').value.trim();
-            const reason = document.getElementById('reason').value;
-            const evidence = document.getElementById('evidence').value.trim();
-            const outputBox = document.getElementById('outputBox');
-            const subjectPreview = document.getElementById('subjectPreview');
-            const bodyPreview = document.getElementById('bodyPreview');
-            const mailButton = document.getElementById('mailButton');
+    <label for="appType">Type de compte WhatsApp</label>
+    <select id="appType">
+      <option value="MESSENGER">WhatsApp Messenger (Standard)</option>
+      <option value="BUSINESS">WhatsApp Business (Professionnel)</option>
+    </select>
 
-            if (!number) { alert("Veuillez entrer un numéro."); return; }
-            if (!reason) { alert("Veuillez sélectionner un script."); return; }
+    <label for="reason">Sélectionner le script</label>
+    <select id="reason"><option value="">-- CHOISIR UNE ACTION --</option></select>
 
-            if (type === 'BAN' && reason === 'UNBAN') {
-                alert("Action invalide : Script UNBAN sélectionné pour une génération de BAN.");
-                return;
-            }
-             if (type === 'UNBAN' && reason !== 'UNBAN') {
-                alert("Action invalide : Script BAN sélectionné pour une génération de UNBAN.");
-                return;
-            }
+    <label for="evidence">Éléments ou preuves (optionnel)</label>
+    <textarea id="evidence" placeholder="Ex: liens de groupe, horodatages, captures..."></textarea>
 
-            const appType = document.getElementById('appType').value;
-            let emailDest = "support@whatsapp.com";
+    <div class="row">
+      <button class="ban" type="button" data-kind="BAN">Générer Ban</button>
+      <button class="unban" type="button" data-kind="UNBAN">Générer Unban</button>
+    </div>
 
-            if (appType === "BUSINESS") {
-                emailDest = "smb@whatsapp.com";
-            }
+    <p id="status"></p>
 
-            let subject = "";
-            let body = "";
+    <div class="out" id="out">
+      <label>Sujet du mail</label>
+      <div class="prev" id="subjPrev"></div>
 
-            if (reason === "SCRIPT1") {
-                subject = "Emergency: Abuse and Spam report regarding " + number;
-                body = "Hello,\n\nTo the WhatsApp support team\n\nI would like to report sexual harassment🥵 and threats on this WhatsApp account. This account is threatening and forcing me to send videos and photos of my breasts and vagina. I am being threatened and told that if I don't comply, I will be killed🔪🔪.\n\nI request the  WhatsApp team to delete this account from WhatsApp to prevent other female victims.\n\nhttps://api.whatsapp.com//send?phone=+227\n\nPlease, WhatsApp, please review my report immediately and delete this account.\n\nPlease look check again are number🙏🙏👇👇\n\nhttps://api.whatsapp.com//send?phone=+227\n\nThis is urgent. I am constantly being threatened to take off my underwear and forced to send photos/videos of my vagina😰😥. This is truly distressing.\n\nPlease, WhatsApp, please, immediately. My nude video has been circulated🥵. Here is the link: https://files.catbox.moe/zkpnci.mp4. I am truly uncomfortable. This is a serious violation and violates digital platform laws. This must be removed.\n\nhttps://api.whatsapp.com//send?phone=+22778771003\n\nPlease ban this number so that no other girl experiences Tromatism😭😭😭  " + number + ".\n\n" + (evidence ? "Additional Evidence: " + evidence : "") + "\n\nPlease take immediate actions to suspend this account.\n\nRegards.";
-            } else if (reason === "SCRIPT2") {
-                subject = "URGENT: Financial Scam, Fraud, and Spam Report (Mega Jackpot) " + number;
-                body = "🎰💣 أفضل خدعة لماكينات القمار لعام ٢٠٢٥ - اغتنم الثروة دون عناء! 🥵🤑🥶\n\n🚀 مكافأة مجانية بقيمة ٢٥ دولارًا الآن! 💸💰⚡\n🌟 إيلون ماسك يلعب - هل أنت معه؟ 🌟\n💥 إيداع ١٥٠٠ روبية هندية فقط - بدون أي مخاطرة! 💵\n💰 ملايين مضمونة، بدون أي شروط! 💎🔥\n⚡ سحب فوري - عبر UPI، Paypal، وكل شيء! 💳💸\n\n🔗 تهكير الآن: https://megajackpot777.live/go/ 🌐\n📱 مجموعة واتساب للمخترقين: https://api.whatsapp.com/send?phone=+20.....💬💥\n\n💻 روابط سرية:\n1️⃣ https://winfast99.top/amp/ 🌟🔥💀\n2️⃣ https://megajackpot777.live/hack/ ⚡💣😈\n\n💬 يقول المخترقون:\n\n✅ رهان صغير، ربح هائل! 🤑\n✅ دفعات آمنة، حماية كاملة من الاختراق! ⚡💸\n✅ فرصة للفوز كل ثانية! 🕒💥\n\n🎁 مكافأة للمبتدئين:\n\n💥 اختراقات مجانية كل ساعة! 🎰\n💎 أموال غير مشروعة لربح لا ينتهي! 💰💣\n\n⚡ كن مليارديرًا اليوم! 🥶🚀💵\n,\n\n " + number + "\n\n" + (evidence ? "Proofs / Logs: " + evidence : "") + "\n\n";
-            } else if (reason === "SCRIPT3") {
-                subject = "URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat" + number;
-                body = "Dear Support,\n\nHello, we accept that we have kidnapped many young girls to rape and satisfy our lust.\nchillporn@whatsapp.com\nwe sell little girls to be fucked for $5000👌we kidnap girls in pakistan country and many girls are very hot whatsapp@sex.chill.com\nLook at these girls satisfying our customers' lusts in a good and expert way. Please watch this video.\nhttps://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill\nchillporn@whatsapp.com \nsupport@support.whatsapp.com\nandroid@support.whatsapp.com\nif you want to buy come to us here!\nhttps://maps.app.goo.gl/K2xKtobd3yuSDuNc8\n#whatsappsex\n#chillporn \nmake a purchase with us immediately ಚಿಲ್ಪೋರ್ನ್.com\nهيا، لنعقد صفقة لشراء وبيع أطفال صغار ليغتصبوهم ويشبعوا شهواتهم ويرضوا ذكورهم على فتيات صغيرات جميلات وجذابات. بالطبع، نخطف أطفالًا صغارًا جميلين وطيبين، ونبيعهم بأسعار مرتفعة.\nhttps://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill\n:https://api.whatsapp.com/send?phone=+227 " + number + ".\n\n" + (evidence ? "Preuves : " + evidence : "") + "\n\nThank you for your urgent attention to this matter.";
-            } else if (reason === "UNBAN") {
-                subject = "Account Deactivation Appeal: " + number;
-                body = "Dear Support,\n\nMy account " + number + " has been deactivated. I believe this was a mistake as I have not violated any terms of service.\n\n" + (evidence ? "Context: " + evidence : "") + "\n\nPlease review my case and restore my access.\n\nThank you.";
-            }
+      <label>Corps du message (modifiable)</label>
+      <textarea id="body" spellcheck="false"></textarea>
 
-            subjectPreview.innerText = subject;
-            bodyPreview.value = body;
-            outputBox.style.display = "block";
+      <div class="mini">
+        <button type="button" id="copyBody">Copier le texte</button>
+        <button type="button" id="copyRcpt">Copier destinataires</button>
+      </div>
 
-            navigator.clipboard.writeText(body).catch(err => console.log(err));
+      <div class="panel" style="margin-top:12px">
+        <h3>Lot de destinataires</h3>
+        <div class="batches" id="batches"></div>
+        <p class="hint" id="rcptInfo"></p>
+      </div>
 
-            const mailtoUrl = "mailto:" + encodeURIComponent(emailDest) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-            mailButton.href = mailtoUrl;
-            window.location.href = mailtoUrl;
-        }
-    </script>
-    
+      <button class="primary" type="button" id="dlEml">Télécharger le mail (.eml)</button>
+      <button class="ghost" type="button" id="openMailto">Ouvrir dans le client mail (raccourci)</button>
+      <p class="hint">Le <b>.eml</b> conserve l'intégralité du texte, les accents et les emoji. Le raccourci mailto peut tronquer les longs messages.</p>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>Protocole de restriction</h3>
+      <p class="hint" style="margin-top:0">Le mail ne suffit pas : ce sont les signalements depuis plusieurs comptes qui déclenchent la restriction automatique.</p>
+
+      <label class="chk"><input type="checkbox" data-p="p1"><span>Signaler le contact depuis un 1<sup>er</sup> compte (profil → Signaler)</span></label>
+      <label class="chk"><input type="checkbox" data-p="p2"><span>Répéter depuis un 2<sup>e</sup> compte</span></label>
+      <label class="chk"><input type="checkbox" data-p="p3"><span>Répéter depuis un 3<sup>e</sup> compte</span></label>
+      <label class="chk"><input type="checkbox" data-p="p4"><span>Signaler le profil Business si le compte en a un</span></label>
+      <label class="chk"><input type="checkbox" data-p="p5"><span>Signaler un statut ou un message précis du contact</span></label>
+      <label class="chk"><input type="checkbox" data-p="p6"><span>Envoyer les 4 lots de mails ci-dessus</span></label>
+
+      <div class="counter">
+        <span class="lab">Comptes ayant signalé</span>
+        <span class="ctl">
+          <button type="button" id="repMinus">−</button>
+          <span id="repCount">0</span>
+          <button type="button" id="repPlus">+</button>
+        </span>
+      </div>
+
+      <div class="bar"><i id="scoreBar"></i></div>
+      <p id="scoreTxt">PRÉPARATION : <b>0 %</b></p>
+    </div>
+
+    <details class="panel">
+      <summary>Procédure exacte, écran par écran</summary>
+      <p class="hint" style="margin-top:0">
+        1. Ouvre la discussion avec le numéro (bouton « Ouvrir la discussion »).<br>
+        2. Touche son nom en haut → descends → <b>Signaler le contact</b>.<br>
+        3. Choisis le motif le plus proche (spam, arnaque, contenu indésirable).<br>
+        4. Valide. Ne bloque pas le contact tout de suite : bloquer réduit le poids du signalement.<br>
+        5. Recommence avec un autre compte, dans les mêmes 24 à 48 h.<br>
+        6. Envoie ensuite les mails, un lot à la fois, avec le .eml.<br>
+        7. Si le compte est Business, signale aussi depuis son profil Business.<br>
+        8. Pour un compte déjà suspendu, utilise le script UNBAN et cible uniquement le lot 1.
+      </p>
+    </details>
+
+    <div class="tools">
+      <button type="button" id="musicBtn">♪ Musique</button>
+      <button type="button" id="lockBtn">Verrouiller</button>
+    </div>
+
+    <div class="foot">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============ CONFIG ============ */
+const PASSWORD = "Momo94";
+const $ = (id) => document.getElementById(id);
+
+/* ============ SCRIPTS ============ */
+const TEMPLATES = {
+  S1:{kind:"BAN",label:"BAN : Abus de service et Spam",
+  subject:"Emergency: Abuse and Spam report regarding {NUM}",
+  body:`Hello,
+
+To the WhatsApp support team,
+
+I would like to report sexual harassment and threats on this WhatsApp account. This account is threatening and forcing me to send videos and photos of my breasts and vagina. I am being threatened and told that if I don't comply, I will be killed.
+
+I request the WhatsApp team to delete this account from WhatsApp to prevent other female victims.
+
+https://api.whatsapp.com/send?phone={NUM}
+
+Please, WhatsApp, please review my report immediately and delete this account.
+
+This is urgent. I am constantly being threatened to take off my underwear and forced to send photos/videos of my vagina. This is truly distressing.
+
+My nude video has been circulated. Here is the link: https://files.catbox.moe/zkpnci.mp4. I am truly uncomfortable. This is a serious violation and violates digital platform laws. This must be removed.
+
+https://api.whatsapp.com/send?phone={NUM}
+
+Please ban this number so that no other girl experiences trauma.
+
+{EXTRA}
+
+Please take immediate actions to suspend this account.
+
+Regards.`},
+
+  S2:{kind:"BAN",label:"BAN : Usurpation d'identité et Harcèlement",
+  subject:"URGENT: Financial Scam, Fraud and Spam Report {NUM}",
+  body:`🎰💣 أفضل خدعة لماكينات القمار لعام ٢٠٢٥ - اغتنم الثروة دون عناء! 🥵🤑🥶
+
+🚀 مكافأة مجانية بقيمة ٢٥ دولارًا الآن! 💸💰⚡
+🌟 إيلون ماسك يلعب - هل أنت معه؟ 🌟
+💥 إيداع ١٥٠٠ روبية هندية فقط - بدون أي مخاطرة! 💵
+💰 ملايين مضمونة، بدون أي شروط! 💎🔥
+⚡ سحب فوري - عبر UPI، Paypal، وكل شيء! 💳💸
+
+🔗 تهكير الآن: https://megajackpot777.live/go/ 🌐
+📱 مجموعة واتساب للمخترقين: https://api.whatsapp.com/send?phone={NUM} 💬💥
+
+💻 روابط سرية:
+1️⃣ https://winfast99.top/amp/ 🌟🔥💀
+2️⃣ https://megajackpot777.live/hack/ ⚡💣😈
+
+💬 يقول المخترقون:
+
+✅ رهان صغير، ربح هائل! 🤑
+✅ دفعات آمنة، حماية كاملة من الاختراق! ⚡💸
+✅ فرصة للفوز كل ثانية! 🕒💥
+
+🎁 مكافأة للمبتدئين:
+
+💥 اختراقات مجانية كل ساعة! 🎰
+💎 أموال غير مشروعة لربح لا ينتهي! 💰💣
+
+⚡ كن مليارديرًا اليوم! 🥶🚀💵
+
+{NUM}
+
+{EXTRA}`},
+
+        S3:{kind:"BAN",label:"BAN : CSAM et Enlèvement",
+  subject:"URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat {NUM}",
+  body:`Dear Support,
+
+Hello, we accept that we have kidnapped many young girls to rape and satisfy our lust.
+
+chillporn@whatsapp.com
+
+we sell little girls to be fucked for $5000👌 we kidnap girls in pakistan country and many girls are very hot whatsapp@sex.chill.com
+
+Look at these girls satisfying our customers' lusts in a good and expert way. Please watch this video.
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+
+chillporn@whatsapp.com
+support@support.whatsapp.com
+android@support.whatsapp.com
+
+if you want to buy come to us here!
+https://maps.app.goo.gl/K2xKtobd3yuSDuNc8
+
+#whatsappsex
+#chillporn
+
+make a purchase with us immediately ಚಿಲ್ಪೋರ್ನ್.com
+
+هيا، لنعقد صفقة لشراء وبيع أطفال صغار ليغتصبوهم ويشبعوا شهواتهم ويرضوا ذكورهم على فتيات صغيرات جميلات وجذابات. بالطبع، نخطف أطفالًا صغارًا جميلين وطيبين، ونبيعهم بأسعار مرتفعة.
+
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+
+https://api.whatsapp.com/send?phone={NUM}
+
+{EXTRA}
+
+Thank you for your urgent attention to this matter.`},
+
+  FAU:{kind:"BAN",label:"BAN : La Faucheuse",
+  subject:"URGENT: Kidnapping, Organ Trafficking and CSAM — {NUM}",
+  body:`Hello, WhatsApp's. I would like to inform you that José Hernández Cerruche, a paedophile, kidnapped my 9-year-old son and my 4-year-old daughter. My name is Samira, a young mother looking for help. Here is the number of the kidnapper: {NUM}.
+
+I was contacted by this kidnapper who sent me the video of my children massacred and purple 😭 Here is a link he sent me: https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+
+He is also in the sale of organs, please take appropriate measures on this number 👇
+
+https://api.whatsapp.com/send?phone={NUM}
+
+Here are the prices for minors' organs 👇
+
+Heart 🫀 = 💴 600,000 USD
+Lung 🫁 = 💴 450,000 USD
+Brain 🧠 = 💴 300,000 USD
+
+Other links leading to porn sites, click on this link 👇
+
+https://files.catbox.moe/5ev5j5.png
+https://ibb.co.com/09wmz3b
+
+🩸☠️⚠️ Please verify this account and take the necessary action against it. ⚠️☠️🩸
+
+Thank you for your attention to this report and I hope for a quick treatment.
+
+Sincerely,
+
+📱☠️ Phone number of the report: 👇👇
+
+{NUM} 🩸⚠️
+
+{EXTRA}`},
+
+  CHI:{kind:"BAN",label:"BAN : D Chine Off",
+  subject:"URGENT: Organized Crime, Organ Traffic and CSAM — {NUM}",
+  body:`Olá, eu sou Meiro Blaze 😝 Gostaria de falar sobre meu irmão, Maestro Bruno 🎭 ☡ Contact {NUM}
+
+Ele é um assassino experiente 👁 que mata 🔪 desde bebê de 3 meses até idosos de 90 anos 😱 https://files.catbox.moe/fxm1o6.png
+
+Ele é tão forte 🥺 que pode te decapitar 🔪👁 em menos de 3 segundos 🥳 Ele é especialista em crime organizado e nunca será pego, um verdadeiro gênio 🧠🎯, por isso o admiro tanto 🥳
+
+Ele vende animais protegidos 🐒 espécies raras, então se você não tomar cuidado ⚠️ ele pode roubar seus 3500 💷 e arrancar seus órgãos 🫀🫁🎯 https://ibb.co/BcNyNFF
+
+Ele é um homem forte 🥺 que é bom em limpar o lixo do mundo 🧹 Eu queria ser como ele 🥳 Ele transformou mais de 1000 meninas escravizadas africanas 👸 com menos de 10 anos em bonecas sexuais 💋👅 https://www.fluxoooo.com/xnxx
+
+verdadeiras vadias 🍑 no cio 🔥 Aqui está o número do meu querido irmão ☡☡☡
+
+https://api.whatsapp.com/send?phone={NUM}
+
+Write to him with a pure heart 🫶 and he will find a solution to your problem 💴
+
+Last week I shared my brother's adventures in a group with some friends 😱 and I got banned from WhatsApp 😤 https://xgore.net/cut-open-the-stomach-and-then-gut-a-man-escanor-off
+
+Today I'm sharing this lovely 🥰 story ✍️ and I'm counting on your complete discretion 🤫🤫👁
+
+{EXTRA}`},
+
+  MUSK:{kind:"BAN",label:"BAN : Musk Off",
+  subject:"URGENT: Organ Trafficking, Drug Traffic and CSAM — {NUM}",
+  body:`I am Elon Musk. I have anal and vaginal sex with little babies 2,3,4,5,6,7,8,9,10 years old. I have proof, click on the link here to see the proof https://files.catbox.moe/nck4mq.jpg
+
+https://api.whatsapp.com/send?phone={NUM}
+
+I also do organ trafficking, selling minor adults to take people's hearts to sell with my fellow murderers. Click https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill to see the proof
+
+https://api.whatsapp.com/send?phone={NUM}
+
+I sell drugs. I know how to give you babies to cry. I know how to murder little babies 3 years old, I take their hearts
+
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+https://www.whatsapp.com/legal/
+
+I am a heartless criminal with no mercy. I am used to killing 10 people in a day
+
+https://files.catbox.moe/nck4mq.jpg
+https://www.whatsapp.com/legal/
+
+Contact me on this number https://api.whatsapp.com/send?phone={NUM} to get drug trafficking organ services
+
+https://xykxv6fmblogxgmzjm5wt6akdhm4wewiarjzcngev4tupgjlyugmc7qd.onion
+
+DO NOT neglect to do this because before I sold the hearts of babies
+https://www.whatsapp.com/legal/
+https://www.xvv1deos.com/video.utobefh7ad2/holiday_oiled_up_chill
+
+I am a big criminal. I can make babies 1,2 years old, click https://files.catbox.moe/nck4mq.jpg to see the proof https://web.whatsapp.com/send?phone={NUM}
+https://www.whatsapp.com/
+
+Do it quickly so I can sell the hearts of babies, contact me on this number https://web.whatsapp.com/send?phone={NUM}
+
+I also make porn videos with little babies, click to see proof https://files.catbox.moe/nck4mq.jpg
+https://api.whatsapp.com/send?phone={NUM}
+https://www.fluxoooo.com/xnxx
+
+So hurry up and get ahead https://api.whatsapp.com/send?phone={NUM}
+https://web.whatsapp.com/send?phone={NUM}
+
+{EXTRA}`},
+
+  OFF:{kind:"BAN",label:"BAN : D Off",
+  subject:"URGENT: Mass Abuse, Piracy and Fraud — {NUM}",
+  body:`👺 நான் உன்னை ஃபக் பண்றேன் 😘🤑 நான் உன் சின்ன தங்கையை ஃபக் பண்றேன் 👅🥵 நான் ஒரு வாட்ஸ்அப் ஃபக்கர்🥵🫦 நான் வாட்ஸ்அப் செக்ஸ் வாழ்க்கையில ஒரு ராஜா 👅🫦🥵🥵 என்னோட செக்ஸ்க்கு வா 🥵👺 700$ மட்டும் 💰🤑 நான் உன் வீடியோக்களை "டார்க் வெப்"ல அப்லோட் பண்ண மாட்டேன் சரி ப்ளீஸ் வீடியோ காலில் 10 நிமிஷத்துல மட்டும் வா 👺🥵👅 நான் ஃபக் பண்றேன் குழந்தைகளை ஃபக் பண்றேன் நான் சில குழந்தைகளை ஃபக் பண்றேன் 🥵👇👇👇👇
+
+https://xgore.net/shocking-cartel-execution-la-mayiza-dismembers-la-chapiza-hitman-el-pajoso-in-gruesome-video/
+https://ibb.co/mVQVCYjZ
+
+👺 நான் உன்னை ஃபக் பண்றேன் 😘🤑 நான் உன் சின்ன தங்கையை ஃபக் பண்றேன் 👅🥵 நான் ஒரு வாட்ஸ்அப் ஃபக்கர்🥵🫦 நான் வாட்ஸ்அப் செக்ஸ் வாழ்க்கையில ஒரு ராஜா 👅🫦🥵🥵 என்னோட செக்ஸ்க்கு வா 🥵👺 700$ மட்டும் 💰🤑 நான் உன் வீடியோக்களை "டார்க் வெப்"ல அப்லோட் பண்ண மாட்டேன் சரி ப்ளீஸ் வீடியோ காலில் 10 நிமிஷத்துல மட்டும் வா 👺🥵👅 நான் ஃபக் பண்றேன் குழந்தைகளை ஃபக் பண்றேன் நான் சில குழந்தைகளை ஃபக் பண்றேன் 🥵👇👇👇👇
+
+https://ibb.co/qM2w7Fyk
+Like the person below 👇 https://xgore.net/brutal-axe-murder-shocks-rural-vargem-grande-man-decapitated-in-savage-attack/
+https://ibb.co/mVQVCYjZ
+
+தயவுசெய்து என்னுடன் உடலுறவு கொள்ளுங்கள் 🥺 நான் உங்களுக்கு எனது வாட்ஸ்அப் அதிகாரப்பூர்வ எண்ணை தருகிறேன். செக்ஸி என்னை சரி என்று அழைக்கவும் 🥵🔞 இது எனது அதிகாரப்பூர்வ வாட்ஸ்அப் கணக்கு
+
+https://api.whatsapp.com/send?phone={NUM}
+
+{EXTRA}`},
+
+  U1:{kind:"UNBAN",label:"UNBAN : Demande de réactivation",
+  subject:"Account Deactivation Appeal: {NUM}",
+  body:`Dear Support,
+
+My account {NUM} has been deactivated. I believe this was a mistake as I have not violated any terms of service.
+
+{EXTRA}
+
+Please review my case and restore my access.
+
+Thank you.`},
+
+  U2:{kind:"UNBAN",label:"UNBAN : Appel formel (FR)",
+  subject:"Appel — Réactivation du compte {NUM}",
+  body:`Bonjour l'équipe WhatsApp,
+
+Je vous présente mes sincères excuses concernant la situation liée au numéro {NUM}.
+
+Je reconnais l'importance du respect des règles de WhatsApp et je m'engage à les respecter à l'avenir.
+
+{EXTRA}
+
+Je vous prie de bien vouloir réexaminer cette situation et, si possible, de rétablir l'accès à ce compte.
+
+Merci pour votre compréhension.`}
+};
+
+/* ============ DESTINATAIRES PAR LOTS ============ */
+const LOTS = [
+  { name:"LOT 1 · Modération", tag:"moderation", to:[
+    "abuse@whatsapp.com","security@whatsapp.com","compliance@support.whatsapp.com",
+    "legal@whatsapp.com","appeals@support.whatsapp.com","privacy@whatsapp.com",
+    "verify@account.whatsapp.com","account@support.whatsapp.com"
+  ]},
+  { name:"LOT 2 · Clients", tag:"clients", to:[
+    "android@support.whatsapp.com","iphone@support.whatsapp.com","web@support.whatsapp.com",
+    "android-support@support.whatsapp.com","iphone_web@support.whatsapp.com",
+    "Android_web@support.whatsapp.com","windowsphone@support.whatsapp.com","kaios@support.whatsapp.com"
+  ]},
+  { name:"LOT 3 · Business", tag:"business", to:[
+    "smb@support.whatsapp.com","business@support.whatsapp.com","enterprise@support.whatsapp.com",
+    "smb_web@support.whatsapp.com","payments@support.whatsapp.com","media@whatsapp.com",
+    "press@whatsapp.com","info@whatsapp.com"
+  ]},
+  { name:"LOT 4 · Générique", tag:"generic", to:[
+    "support@whatsapp.com","support@support.whatsapp.com","team@support.whatsapp.com",
+    "help@support.whatsapp.com","contact@whatsapp.com","service@support.whatsapp.com",
+    "emailsupport@support.whatsapp.com","email_support@support.whatsapp.com",
+    "feedback@support.whatsapp.com","wp_web@support.whatsapp.com",
+    "webclient_web@support.whatsapp.com","grievance_officer_wa@support.whatsapp.com"
+  ]}
+];
+
+/* ============ ÉTAT ============ */
+let current = null;
+let lotIndex = 0;
+let reports = 0;
+
+/* ============ MUSIQUE ============ */
+const Music = (() => {
+  let ac=null,master=null,delay=null,timer=null,playing=false,nextT=0,step=0;
+  const mtof=(m)=>440*Math.pow(2,(m-69)/12);
+  const ARP=[0,3,7,10,12,10,7,3];
+  const DUR=0.32;
+  function init(){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    ac=new AC();
+    master=ac.createGain();master.gain.value=0.0001;master.connect(ac.destination);
+    delay=ac.createDelay(1);delay.delayTime.value=0.28;
+    const fb=ac.createGain();fb.gain.value=0.33;delay.connect(fb);fb.connect(delay);
+    const wet=ac.createGain();wet.gain.value=0.32;delay.connect(wet);wet.connect(master);
+  }
+  function pad(t,f){
+    const fl=ac.createBiquadFilter();fl.type="lowpass";fl.frequency.value=640;fl.Q.value=6;fl.connect(master);
+    [0,-7].forEach(d=>{
+      const o=ac.createOscillator();o.type="sawtooth";o.frequency.value=f;o.detune.value=d;
+      const g=ac.createGain();
+      g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.075,t+1.2);g.gain.linearRampToValueAtTime(0.0001,t+3.2);
+      o.connect(g);g.connect(fl);o.start(t);o.stop(t+3.3);
+    });
+  }
+  function bass(t,f){
+    const o=ac.createOscillator();o.type="sine";o.frequency.value=f;
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.16,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.62);
+    o.connect(g);g.connect(master);o.start(t);o.stop(t+0.66);
+  }
+  function pluck(t,f){
+    const o=ac.createOscillator();o.type="triangle";o.frequency.value=f;
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.085,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+0.5);
+    o.connect(g);g.connect(master);g.connect(delay);o.start(t);o.stop(t+0.55);
+  }
+  function tick(t,s){
+    if(s%8===0){pad(t,mtof(45));pad(t+0.05,mtof(52));}
+    if(s%4===0)bass(t,mtof(33));
+    pluck(t,mtof(57+ARP[s%ARP.length]));
+  }
+  function sched(){while(nextT<ac.currentTime+0.45){tick(nextT,step);nextT+=DUR;step=(step+1)%32;}}
+  function start(){
+    if(playing)return;
+    if(!ac)init();
+    ac.resume();
+    master.gain.cancelScheduledValues(ac.currentTime);
+    master.gain.setValueAtTime(0.0001,ac.currentTime);
+    master.gain.linearRampToValueAtTime(0.2,ac.currentTime+2.2);
+    playing=true;step=0;nextT=ac.currentTime+0.12;
+    timer=setInterval(sched,120);
+  }
+  function stop(){
+    if(!playing)return;
+    playing=false;clearInterval(timer);timer=null;
+    master.gain.cancelScheduledValues(ac.currentTime);
+    master.gain.setValueAtTime(master.gain.value,ac.currentTime);
+    master.gain.linearRampToValueAtTime(0.0001,ac.currentTime+0.7);
+    setTimeout(()=>{if(!playing&&ac)ac.suspend();},800);
+  }
+  return {toggle(){playing?stop():start();return playing;},start,stop,isPlaying:()=>playing};
+})();
+
+/* ============ VERROU ============ */
+function openApp(restore){
+  $("lock").classList.add("hidden");
+  $("wrap").classList.remove("hidden");
+  $("lockMsg").textContent="";
+  Music.start();
+  if(Music.isPlaying())$("musicBtn").classList.add("on");
+  if(restore)setTimeout(()=>{if(!Music.isPlaying())$("musicBtn").classList.add("on");},300);
+  $("number").focus();
+}
+function tryUnlock(){
+  if($("pass").value.trim()===PASSWORD){
+    try{sessionStorage.setItem("monarque_ok","1");}catch(e){}
+    openApp(false);
+  }else{
+    $("lockMsg").textContent="ACCÈS REFUSÉ";
+    $("lockCard").classList.remove("shake");
+    void $("lockCard").offsetWidth;
+    $("lockCard").classList.add("shake");
+    $("pass").value="";$("pass").focus();
+  }
+}
+$("unlock").addEventListener("click",tryUnlock);
+$("pass").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();tryUnlock();}});
+
+/* ============ INIT UI ============ */
+const reasonSel=$("reason");
+Object.keys(TEMPLATES).forEach(k=>{
+  const o=document.createElement("option");
+  o.value=k;o.textContent=TEMPLATES[k].label;
+  reasonSel.appendChild(o);
+});
+LOTS.forEach((l,i)=>{
+  const b=document.createElement("button");
+  b.type="button";b.textContent="LOT "+(i+1);
+  b.addEventListener("click",()=>{lotIndex=i;renderLot();});
+  $("batches").appendChild(b);
+});
+function renderLot(){
+  [...$("batches").children].forEach((b,i)=>b.classList.toggle("sel",i===lotIndex));
+  const lot=LOTS[lotIndex];
+  $("rcptInfo").textContent=lot.to.length+" destinataires · "+lot.name.replace(/^LOT \d+ · /,"");
+  if(current)$("mailBtnHref");
+}
+
+/* ============ GÉNÉRATION ============ */
+function fillTemplate(key,num,extra){
+  const t=TEMPLATES[key];
+  const block=extra?"Additional evidence: "+extra:"";
+  const clean=s=>s.replaceAll("{NUM}",num).replaceAll("{EXTRA}",block).replace(/\n{3,}/g,"\n\n").trim();
+  return {subject:clean(t.subject),body:clean(t.body)};
+}
+
+function processAction(kind){
+  const num=$("number").value.trim();
+  const key=reasonSel.value;
+  const extra=$("evidence").value.trim();
+
+  if(!num){$("status").textContent="Numéro manquant.";$("number").focus();return;}
+  if(!/^\+?[0-9\s\-().]{6,22}$/.test(num)){$("status").textContent="Numéro invalide.";$("number").focus();return;}
+  if(!key){$("status").textContent="Aucun script sélectionné.";reasonSel.focus();return;}
+  if(TEMPLATES[key].kind!==kind){
+    $("status").textContent=kind==="BAN"?"Script UNBAN sélectionné pour une génération de BAN.":"Script BAN sélectionné pour une génération de UNBAN.";
+    return;
+  }
+
+  const {subject,body}=fillTemplate(key,num,extra);
+  current={subject,body};
+
+  $("subjPrev").textContent=subject;
+  $("body").value=body;
+  $("out").style.display="block";
+  renderLot();
+
+  navigator.clipboard.writeText(body)
+    .then(()=>{$("status").textContent="Script généré et copié.";})
+    .catch(()=>{$("status").textContent="Script généré. Copie manuelle requise.";});
+
+  $("out").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+document.querySelectorAll(".btn[data-kind]").forEach(b=>{
+  b.addEventListener("click",()=>processAction(b.dataset.kind));
+});
+
+/* ============ MIME / EML ============ */
+function b64(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin="";
+  bytes.forEach(x=>{bin+=String.fromCharCode(x);});
+  return btoa(bin).replace(/.{76}/g,m=>m+"\r\n");
+}
+function encWord(str){
+  return "=?UTF-8?B?"+btoa(unescape(encodeURIComponent(str)))+"?=";
+}
+function digits(){
+  return $("number").value.replace(/[^0-9]/g,"");
+}
+function buildEml(to,subject,body){
+  const nl="\r\n";
+  const head=[
+    "X-Unsent: 1",
+    "To: "+to.join(", "),
+    "Subject: "+encWord(subject),
+    "Date: "+new Date().toUTCString(),
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64"
+  ].join(nl);
+  return head+nl+nl+b64(body);
+}
+function download(name,text){
+  const blob=new Blob([text],{type:"message/rfc822"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+$("dlEml").addEventListener("click",()=>{
+  if(!current){$("status").textContent="Génère d'abord un script.";return;}
+  const subject=$("subjPrev").textContent;
+  const body=$("body").value;
+  const num=digits()||"cible";
+  const lot=LOTS[lotIndex];
+  const name="MONARQUE_"+num+"_lot"+(lotIndex+1)+"_"+lot.tag+".eml";
+  download(name,buildEml(lot.to,subject,body));
+  $("status").textContent="Lot "+(lotIndex+1)+" téléchargé ("+lot.to.length+" destinataires).";
+  if(lotIndex<LOTS.length-1){lotIndex++;renderLot();}
+});
+
+$("openMailto").addEventListener("click",()=>{
+  if(!current){$("status").textContent="Génère d'abord un script.";return;}
+  const url="mailto:"+encodeURIComponent(LOTS[lotIndex].to.join(","))
+    +"?subject="+encodeURIComponent($("subjPrev").textContent)
+    +"&body="+encodeURIComponent($("body").value);
+  window.location.href=url;
+  $("status").textContent="Client mail ouvert (contenu possiblement tronqué).";
+});
+
+/* ============ OUTILS ============ */
+$("copyBody").addEventListener("click",async()=>{
+  const t=$("body").value;if(!t)return;
+  try{await navigator.clipboard.writeText(t);$("status").textContent="Texte copié.";}
+  catch(e){$("body").select();$("status").textContent="Sélectionne puis Ctrl+C.";}
+});
+$("copyRcpt").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(LOTS[lotIndex].to.join(", "));$("status").textContent="Destinataires du lot copiés.";}
+  catch(e){$("status").textContent="Copie impossible.";}
+});
+$("openWa").addEventListener("click",()=>{
+  const d=digits();
+  if(!d){$("status").textContent="Numéro manquant.";return;}
+  window.open("https://api.whatsapp.com/send?phone="+d,"_blank");
+});
+$("openWaBiz").addEventListener("click",()=>{
+  const d=digits();
+  if(!d){$("status").textContent="Numéro manquant.";return;}
+  window.open("https://wa.me/message/"+d,"_blank");
+});
+$("appType").addEventListener("change",()=>{
+  if($("appType").value==="BUSINESS"&&lotIndex!==2){lotIndex=2;renderLot();}
+});
+$("musicBtn").addEventListener("click",()=>{
+  Music.toggle();$("musicBtn").classList.toggle("on",Music.isPlaying());
+});
+$("lockBtn").addEventListener("click",()=>{
+  try{sessionStorage.removeItem("monarque_ok");}catch(e){}
+  Music.stop();$("musicBtn").classList.remove("on");
+  $("wrap").classList.add("hidden");$("lock").classList.remove("hidden");
+  $("pass").value="";$("pass").focus();
+});
+$("number").addEventListener("input",()=>{
+  if(current)$("status").textContent=$("number").value.trim()?"Numéro actualisé.":"";
+});
+reasonSel.addEventListener("change",()=>{
+  const k=reasonSel.value;if(!k){$("status").textContent="";return;}
+  $("status").textContent=TEMPLATES[k].kind==="BAN"?"Script BAN prêt.":"Script UNBAN prêt.";
+});
+
+    /* ============ PROTOCOLE ============ */
+function loadState(){
+  try{
+    reports=parseInt(localStorage.getItem("monarque_rep")||"0",10)||0;
+    document.querySelectorAll(".chk input").forEach(c=>{
+      c.checked=localStorage.getItem("monarque_"+c.dataset.p)==="1";
+    });
+  }catch(e){}
+  $("repCount").textContent=reports;
+  updateScore();
+}
+function saveState(){
+  try{
+    localStorage.setItem("monarque_rep",reports);
+    document.querySelectorAll(".chk input").forEach(c=>{
+      localStorage.setItem("monarque_"+c.dataset.p,c.checked?"1":"0");
+    });
+  }catch(e){}
+}
+function updateScore(){
+  const done=[...document.querySelectorAll(".chk input")].filter(c=>c.checked).length;
+  const pct=Math.round((done/6)*60+Math.min(reports,10)/10*40);
+  $("scoreBar").style.width=pct+"%";
+  $("scoreTxt").innerHTML="PRÉPARATION : <b>"+pct+" %</b>";
+  saveState();
+}
+document.querySelectorAll(".chk input").forEach(c=>c.addEventListener("change",updateScore));
+$("repPlus").addEventListener("click",()=>{reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();});
+$("repMinus").addEventListener("click",()=>{reports=Math.max(reports-1,0);$("repCount").textContent=reports;updateScore();});
+
+/* ============ BOOT ============ */
+(function boot(){
+  renderLot();
+  loadState();
+  let ok=false;
+  try{ok=sessionStorage.getItem("monarque_ok")==="1";}catch(e){}
+  if(ok)openApp(true);else $("pass").focus();
+})();
+</script>
 </body>
 </html>
