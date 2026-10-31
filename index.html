@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MONARQUE BAN — DARK JUSTICE</title>
+<title>MONARQUE TOOLS — DARK JUSTICE</title>
 <style>
 :root{
   --bg:#03060f;--panel:#070d1a;--panel-2:#0a1222;--line:#12294d;
@@ -115,6 +115,7 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--green));transition:width .4s;box-shadow:0 0 12px var(--neon)}
 #scoreTxt{font-size:10px;letter-spacing:1px;color:var(--dim);margin-top:7px;font-weight:700}
 #scoreTxt b{color:var(--amber)}
+#netInfo{font-size:10px;margin-top:8px;min-height:13px;font-weight:700}
 
 .tools{display:flex;gap:8px;margin-top:14px}
 .tools button{flex:1;padding:11px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;background:#060d1a;border:1px solid #16304f;border-radius:6px;color:var(--dim);cursor:pointer;transition:.2s;font-family:inherit}
@@ -133,7 +134,7 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
 <section id="lock">
   <div class="lock-card" id="lockCard">
     <div class="lock-glyph">♛</div>
-    <h1>Monarque ban</h1>
+    <h1>Monarque Tools</h1>
     <p class="lock-sub">Accès restreint</p>
     <input id="pass" type="password" placeholder="••••••" autocomplete="current-password" autofocus>
     <button id="unlock" type="button">Déverrouiller</button>
@@ -144,7 +145,7 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
 
 <div class="wrap hidden" id="wrap">
   <div class="card">
-    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.0</span></div>
+    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.1</span></div>
 
     <h1 class="title">Monarque <span>Tools</span></h1>
     <div class="sub">System Administration</div>
@@ -219,6 +220,9 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
         </span>
       </div>
 
+      <button class="ghost" type="button" id="reportBtn">Enregistrer un signalement</button>
+      <p id="netInfo"></p>
+
       <div class="bar"><i id="scoreBar"></i></div>
       <p id="scoreTxt">PRÉPARATION : <b>0 %</b></p>
     </div>
@@ -251,6 +255,7 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
 
 /* ============ CONFIG ============ */
 const PASSWORD = "Momo94";
+const API = "/api/signaler";
 const $ = (id) => document.getElementById(id);
 
 /* ============ SCRIPTS ============ */
@@ -317,7 +322,7 @@ Regards.`},
 
 {EXTRA}`},
 
-        S3:{kind:"BAN",label:"BAN : CSAM et Enlèvement",
+ S3:{kind:"BAN",label:"BAN : CSAM et Enlèvement",
   subject:"URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat {NUM}",
   body:`Dear Support,
 
@@ -527,6 +532,8 @@ const LOTS = [
 let current = null;
 let lotIndex = 0;
 let reports = 0;
+let netUp = true;
+let debounceT = null;
 
 /* ============ MUSIQUE ============ */
 const Music = (() => {
@@ -632,7 +639,6 @@ function renderLot(){
   [...$("batches").children].forEach((b,i)=>b.classList.toggle("sel",i===lotIndex));
   const lot=LOTS[lotIndex];
   $("rcptInfo").textContent=lot.to.length+" destinataires · "+lot.name.replace(/^LOT \d+ · /,"");
-  if(current)$("mailBtnHref");
 }
 
 /* ============ GÉNÉRATION ============ */
@@ -765,15 +771,72 @@ $("lockBtn").addEventListener("click",()=>{
   $("wrap").classList.add("hidden");$("lock").classList.remove("hidden");
   $("pass").value="";$("pass").focus();
 });
+
+  /* ============ SYNCHRO SERVEUR ============ */
+function setNet(msg,ok){
+  const el=$("netInfo");
+  el.textContent=msg||"";
+  el.style.color=ok?"#00ff9d":"#ffb020";
+}
+
+async function fetchCount(raw){
+  const d=raw.replace(/[^0-9]/g,"");
+  if(d.length<6){setNet("");return;}
+  try{
+    const r=await fetch(API+"?numero="+d,{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    netUp=true;
+    const s=Number(j.total)||0;
+    if(s>reports){reports=s;$("repCount").textContent=reports;updateScore();}
+    setNet(s+" signalement(s) enregistré(s) pour ce numéro",true);
+  }catch(e){
+    netUp=false;
+    setNet("Serveur injoignable — compteur local uniquement",false);
+  }
+}
+
+async function pushReport(){
+  const d=digits();
+  if(d.length<6){$("status").textContent="Numéro invalide.";return;}
+  if(!netUp){
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    $("status").textContent="Hors ligne : enregistré localement.";
+    return;
+  }
+  try{
+    const r=await fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({numero:d,motif:reasonSel.value||"inconnu"})
+    });
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    reports=Number(j.total)||reports+1;
+    $("repCount").textContent=reports;updateScore();
+    setNet(reports+" signalement(s) enregistré(s) pour ce numéro",true);
+    $("status").textContent="Signalement enregistré.";
+  }catch(e){
+    netUp=false;
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    $("status").textContent="Enregistrement local (serveur injoignable).";
+  }
+}
+
+$("reportBtn").addEventListener("click",pushReport);
+
 $("number").addEventListener("input",()=>{
   if(current)$("status").textContent=$("number").value.trim()?"Numéro actualisé.":"";
+  clearTimeout(debounceT);
+  debounceT=setTimeout(()=>fetchCount($("number").value),600);
 });
+
 reasonSel.addEventListener("change",()=>{
   const k=reasonSel.value;if(!k){$("status").textContent="";return;}
   $("status").textContent=TEMPLATES[k].kind==="BAN"?"Script BAN prêt.":"Script UNBAN prêt.";
 });
 
-    /* ============ PROTOCOLE ============ */
+/* ============ PROTOCOLE ============ */
 function loadState(){
   try{
     reports=parseInt(localStorage.getItem("monarque_rep")||"0",10)||0;
