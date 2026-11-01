@@ -22,8 +22,7 @@ body{
   color:var(--text);font-family:'Inter','Segoe UI',Roboto,sans-serif;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   min-height:100vh;min-height:100dvh;
-  overflow-x:hidden;
-  -webkit-text-size-adjust:100%;
+  overflow-x:hidden;-webkit-text-size-adjust:100%;
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -101,6 +100,25 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
 .batches button:hover{border-color:var(--cyan);color:var(--cyan)}
 .batches button.sel{background:rgba(0,162,255,.16);border-color:var(--cyan);color:#fff;box-shadow:0 0 14px rgba(0,229,255,.4)}
 
+/* INTEL */
+.intel{border-color:#1f5f8a;background:linear-gradient(180deg,#071527,#060c17)}
+.intel h3{color:var(--amber)}
+.irow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0e2036;font-size:11.5px}
+.irow:last-of-type{border-bottom:0}
+.irow .k{color:#5b86bd;letter-spacing:.6px;font-size:10px;text-transform:uppercase;font-weight:700}
+.irow .v{font-weight:800;text-align:right}
+.v-ok{color:var(--green)}
+.v-warn{color:var(--amber)}
+.v-bad{color:var(--red)}
+.v-neu{color:#8fb0d6}
+.dif{height:6px;background:#0d1c30;border-radius:3px;overflow:hidden;margin-top:9px}
+.dif i{display:block;height:100%;width:0;transition:width .4s}
+#recBox{margin-top:11px;border:1px solid #2a5f3f;background:rgba(0,255,157,.05);border-radius:7px;padding:11px}
+#recBox strong{color:var(--green);display:block;font-size:11px;letter-spacing:1px;margin-bottom:5px;text-transform:uppercase}
+#recBox p{margin:0;font-size:11px;color:#8fb0d6;line-height:1.5}
+#recBox .rz{color:var(--cyan);font-weight:800}
+#probeBtn{margin-top:9px}
+
 .chk{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid #0e1e34;cursor:pointer}
 .chk:last-of-type{border-bottom:0}
 .chk input{appearance:none;width:17px;height:17px;flex:0 0 17px;margin:1px 0 0;background:#040a14;border:1.5px solid #22456e;border-radius:4px;cursor:pointer;transition:.2s;position:relative}
@@ -168,7 +186,7 @@ details[open] .body-in{padding-top:4px}
 
 <div class="wrap hidden" id="wrap">
   <div class="card">
-    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.2</span></div>
+    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.3</span></div>
 
     <h1 class="title">Monarque <span>ban</span></h1>
     <div class="sub">System Administration</div>
@@ -178,6 +196,20 @@ details[open] .body-in{padding-top:4px}
     <div class="mini" style="margin:8px 0 12px">
       <button type="button" id="openWa">Ouvrir la discussion</button>
       <button type="button" id="openWaBiz">Version Business</button>
+    </div>
+
+    <div class="panel intel" id="intel" style="display:none">
+      <h3>Renseignement cible</h3>
+      <div id="intelBody"></div>
+      <div class="dif"><i id="difBar"></i></div>
+      <p class="hint" id="difTxt"></p>
+      <div id="recBox" style="display:none">
+        <strong>Script recommandé</strong>
+        <p><span class="rz" id="recScript"></span> — <span id="recWhy"></span></p>
+        <p style="margin-top:6px">Motif à choisir dans WhatsApp : <b id="recReason"></b></p>
+      </div>
+      <button class="ghost" type="button" id="applyRec" style="display:none">Appliquer la recommandation</button>
+      <button class="ghost" type="button" id="probeBtn">Vérifier l'existence du compte</button>
     </div>
 
     <label for="appType">Type de compte WhatsApp</label>
@@ -279,17 +311,18 @@ details[open] .body-in{padding-top:4px}
 
     <div class="foot">Propriété exclusive du Monarque. Toute utilisation est tracée.</div>
   </div>
-</div>
-
+      </div>
+  
 <script>
 "use strict";
 
 /* ============ CONFIG ============ */
 const PASSWORD = "Momo94";
 const API = "/api/signaler";
+const PROBE = "/api/probe";
 const $ = (id) => document.getElementById(id);
 
-     /* ============ SCRIPTS ============ */
+/* ============ SCRIPTS ============ */
 const TEMPLATES = {
   S1:{kind:"BAN",label:"BAN : Abus de service et Spam",
   subject:"Emergency: Abuse and Spam report regarding {NUM}",
@@ -559,14 +592,142 @@ const LOTS = [
   ]}
 ];
 
+/* ============ INDICATIFS ============ */
+const CC = {
+"1":{n:"États-Unis / Canada",f:"🇺🇸",d:2},"7":{n:"Russie / Kazakhstan",f:"🇷🇺",d:1},
+"20":{n:"Égypte",f:"🇪🇬",d:1},"27":{n:"Afrique du Sud",f:"🇿🇦",d:1},
+"30":{n:"Grèce",f:"🇬🇷",d:1},"31":{n:"Pays-Bas",f:"🇳🇱",d:0},
+"32":{n:"Belgique",f:"🇧🇪",d:0},"33":{n:"France",f:"🇫🇷",d:0},
+"34":{n:"Espagne",f:"🇪🇸",d:0},"36":{n:"Hongrie",f:"🇭🇺",d:1},
+"39":{n:"Italie",f:"🇮🇹",d:0},"40":{n:"Roumanie",f:"🇷🇴",d:1},
+"41":{n:"Suisse",f:"🇨🇭",d:0},"43":{n:"Autriche",f:"🇦🇹",d:0},
+"44":{n:"Royaume-Uni",f:"🇬🇧",d:0},"45":{n:"Danemark",f:"🇩🇰",d:0},
+"46":{n:"Suède",f:"🇸🇪",d:0},"47":{n:"Norvège",f:"🇳🇴",d:0},
+"48":{n:"Pologne",f:"🇵🇱",d:1},"49":{n:"Allemagne",f:"🇩🇪",d:0},
+"51":{n:"Pérou",f:"🇵🇪",d:1},"52":{n:"Mexique",f:"🇲🇽",d:1},
+"53":{n:"Cuba",f:"🇨🇺",d:1},"54":{n:"Argentine",f:"🇦🇷",d:1},
+"55":{n:"Brésil",f:"🇧🇷",d:1},"56":{n:"Chili",f:"🇨🇱",d:1},
+"57":{n:"Colombie",f:"🇨🇴",d:1},"58":{n:"Venezuela",f:"🇻🇪",d:1},
+"60":{n:"Malaisie",f:"🇲🇾",d:1},"61":{n:"Australie",f:"🇦🇺",d:0},
+"62":{n:"Indonésie",f:"🇮🇩",d:1},"63":{n:"Philippines",f:"🇵🇭",d:1},
+"64":{n:"Nouvelle-Zélande",f:"🇳🇿",d:0},"65":{n:"Singapour",f:"🇸🇬",d:0},
+"66":{n:"Thaïlande",f:"🇹🇭",d:1},"81":{n:"Japon",f:"🇯🇵",d:0},
+"82":{n:"Corée du Sud",f:"🇰🇷",d:0},"84":{n:"Vietnam",f:"🇻🇳",d:1},
+"86":{n:"Chine",f:"🇨🇳",d:0},"90":{n:"Turquie",f:"🇹🇷",d:1},
+"91":{n:"Inde",f:"🇮🇳",d:1},"92":{n:"Pakistan",f:"🇵🇰",d:1},
+"93":{n:"Afghanistan",f:"🇦🇫",d:1},"94":{n:"Sri Lanka",f:"🇱🇰",d:1},
+"95":{n:"Birmanie",f:"🇲🇲",d:1},"98":{n:"Iran",f:"🇮🇷",d:1},
+"212":{n:"Maroc",f:"🇲🇦",d:1},"213":{n:"Algérie",f:"🇩🇿",d:1},
+"216":{n:"Tunisie",f:"🇹🇳",d:1},"218":{n:"Libye",f:"🇱🇾",d:1},
+"220":{n:"Gambie",f:"🇬🇲",d:1},"221":{n:"Sénégal",f:"🇸🇳",d:1},
+"222":{n:"Mauritanie",f:"🇲🇷",d:1},"223":{n:"Mali",f:"🇲🇱",d:1},
+"224":{n:"Guinée",f:"🇬🇳",d:1},"225":{n:"Côte d'Ivoire",f:"🇨🇮",d:1},
+"226":{n:"Burkina Faso",f:"🇧🇫",d:1},"227":{n:"Niger",f:"🇳🇪",d:1},
+"228":{n:"Togo",f:"🇹🇬",d:1},"229":{n:"Bénin",f:"🇧🇯",d:1},
+"230":{n:"Maurice",f:"🇲🇺",d:1},"231":{n:"Liberia",f:"🇱🇷",d:1},
+"232":{n:"Sierra Leone",f:"🇸🇱",d:1},"233":{n:"Ghana",f:"🇬🇭",d:1},
+"234":{n:"Nigéria",f:"🇳🇬",d:1},"235":{n:"Tchad",f:"🇹🇩",d:1},
+"236":{n:"Centrafrique",f:"🇨🇫",d:1},"237":{n:"Cameroun",f:"🇨🇲",d:1},
+"238":{n:"Cap-Vert",f:"🇨🇻",d:1},"240":{n:"Guinée équatoriale",f:"🇬🇶",d:1},
+"241":{n:"Gabon",f:"🇬🇦",d:1},"242":{n:"Congo",f:"🇨🇬",d:1},
+"243":{n:"RD Congo",f:"🇨🇩",d:1},"244":{n:"Angola",f:"🇦🇴",d:1},
+"245":{n:"Guinée-Bissau",f:"🇬🇼",d:1},"248":{n:"Seychelles",f:"🇸🇨",d:1},
+"249":{n:"Soudan",f:"🇸🇩",d:1},"250":{n:"Rwanda",f:"🇷🇼",d:1},
+"251":{n:"Éthiopie",f:"🇪🇹",d:1},"252":{n:"Somalie",f:"🇸🇴",d:1},
+"253":{n:"Djibouti",f:"🇩🇯",d:1},"254":{n:"Kenya",f:"🇰🇪",d:1},
+"255":{n:"Tanzanie",f:"🇹🇿",d:1},"256":{n:"Ouganda",f:"🇺🇬",d:1},
+"257":{n:"Burundi",f:"🇧🇮",d:1},"258":{n:"Mozambique",f:"🇲🇿",d:1},
+"260":{n:"Zambie",f:"🇿🇲",d:1},"261":{n:"Madagascar",f:"🇲🇬",d:1},
+"263":{n:"Zimbabwe",f:"🇿🇼",d:1},"264":{n:"Namibie",f:"🇳🇦",d:1},
+"265":{n:"Malawi",f:"🇲🇼",d:1},"267":{n:"Botswana",f:"🇧🇼",d:1},
+"268":{n:"Eswatini",f:"🇸🇿",d:1},"269":{n:"Comores",f:"🇰🇲",d:1},
+"351":{n:"Portugal",f:"🇵🇹",d:0},"352":{n:"Luxembourg",f:"🇱🇺",d:0},
+"353":{n:"Irlande",f:"🇮🇪",d:0},"358":{n:"Finlande",f:"🇫🇮",d:0},
+"370":{n:"Lituanie",f:"🇱🇹",d:1},"371":{n:"Lettonie",f:"🇱🇻",d:1},
+"372":{n:"Estonie",f:"🇪🇪",d:1},"380":{n:"Ukraine",f:"🇺🇦",d:1},
+"381":{n:"Serbie",f:"🇷🇸",d:1},"385":{n:"Croatie",f:"🇭🇷",d:1},
+"386":{n:"Slovénie",f:"🇸🇮",d:1},"387":{n:"Bosnie",f:"🇧🇦",d:1},
+"420":{n:"Tchéquie",f:"🇨🇿",d:1},"421":{n:"Slovaquie",f:"🇸🇰",d:1},
+"880":{n:"Bangladesh",f:"🇧🇩",d:1},"886":{n:"Taïwan",f:"🇹🇼",d:0},
+"961":{n:"Liban",f:"🇱🇧",d:1},"962":{n:"Jordanie",f:"🇯🇴",d:1},
+"963":{n:"Syrie",f:"🇸🇾",d:1},"964":{n:"Irak",f:"🇮🇶",d:1},
+"965":{n:"Koweït",f:"🇰🇼",d:0},"966":{n:"Arabie saoudite",f:"🇸🇦",d:0},
+"967":{n:"Yémen",f:"🇾🇪",d:1},"968":{n:"Oman",f:"🇴🇲",d:0},
+"971":{n:"Émirats arabes unis",f:"🇦🇪",d:0},"972":{n:"Israël",f:"🇮🇱",d:0},
+"973":{n:"Bahreïn",f:"🇧🇭",d:0},"974":{n:"Qatar",f:"🇶🇦",d:0},
+"975":{n:"Bhoutan",f:"🇧🇹",d:1},"976":{n:"Mongolie",f:"🇲🇳",d:1},
+"977":{n:"Népal",f:"🇳🇵",d:1},"992":{n:"Tadjikistan",f:"🇹🇯",d:1},
+"993":{n:"Turkménistan",f:"🇹🇲",d:1},"994":{n:"Azerbaïdjan",f:"🇦🇿",d:1},
+"995":{n:"Géorgie",f:"🇬🇪",d:1},"996":{n:"Kirghizistan",f:"🇰🇬",d:1},
+"998":{n:"Ouzbékistan",f:"🇺🇿",d:1}
+};
+
+/* Plans de numérotation connus : mobile / fixe */
+const PLANS = {
+"33":{m:/^[67]/,x:/^[1-59]/,v:/^9/,len:[9]},
+"44":{m:/^7/,x:/^[1-3]/,len:[10]},
+"49":{m:/^1[5-7]/,x:/^[2-9]/,len:[10,11]},
+"34":{m:/^[67]/,x:/^[89]/,len:[9]},
+"39":{m:/^3/,x:/^[0-2]/,len:[9,10]},
+"32":{m:/^4/,x:/^[2-9]/,len:[8,9]},
+"41":{m:/^7/,x:/^[2-6]/,len:[9]},
+"31":{m:/^6/,x:/^[1-57]/,len:[9]},
+"43":{m:/^6/,x:/^[1-57]/,len:[10,11]},
+"45":{m:/^[2-9]/,len:[8]},
+"46":{m:/^7/,x:/^[1-68]/,len:[9]},
+"47":{m:/^[49]/,x:/^[2-7]/,len:[8]},
+"48":{m:/^[5-8]/,x:/^[1-4]/,len:[9]},
+"351":{m:/^9/,x:/^2/,len:[9]},
+"212":{m:/^[67]/,x:/^5/,len:[9]},
+"221":{m:/^7/,x:/^3/,len:[9]},
+"225":{m:/^[0-9]/,len:[8,10]},
+"227":{m:/^[89]/,len:[8]},
+"234":{m:/^[789]/,len:[10]},
+"254":{m:/^[17]/,len:[9]},
+"233":{m:/^[25]/,len:[9]},
+"243":{m:/^[89]/,len:[9]},
+"237":{m:/^6/,len:[9]},
+"91":{m:/^[6-9]/,len:[10]},
+"92":{m:/^3/,len:[10]},
+"880":{m:/^1/,len:[10]},
+"90":{m:/^5/,len:[10]},
+"20":{m:/^1[0125]/,len:[10]},
+"55":{m:/^[1-9]/,len:[10,11]},
+"52":{m:/^[1-9]/,len:[10]},
+"54":{m:/^9/,x:/^[1-8]/,len:[10]},
+"57":{m:/^3/,len:[10]},
+"1":{m:/^[2-9]/,len:[10]},
+"61":{m:/^4/,x:/^[2-8]/,len:[9]},
+"64":{m:/^2/,len:[8,9,10]},
+"65":{m:/^[89]/,len:[8]},
+"60":{m:/^1/,len:[9,10]},
+"62":{m:/^8/,len:[9,10,11]},
+"63":{m:/^9/,len:[10]},
+"84":{m:/^[35789]/,len:[9]},
+"66":{m:/^[689]/,len:[9]},
+"81":{m:/^[789]/,len:[10]},
+"82":{m:/^1/,len:[9,10]},
+"86":{m:/^1/,len:[11]},
+"7":{m:/^9/,x:/^[3-8]/,len:[10]},
+"971":{m:/^5/,len:[9]},
+"966":{m:/^5/,len:[9]},
+"972":{m:/^5/,len:[9]},
+"974":{m:/^[3567]/,len:[8]},
+"965":{m:/^[569]/,len:[8]},
+"973":{m:/^[36]/,len:[8]}
+};
+PARTIE 3b / 3
+html
 /* ============ ÉTAT ============ */
 let current = null;
 let lotIndex = 0;
 let reports = 0;
 let netUp = true;
 let debounceT = null;
+let intelT = null;
+let lastIntel = null;
 
-/* ============ MUSIQUE ============ */
+  /* ============ MUSIQUE ============ */
 const Music = (() => {
   let ac=null,master=null,delay=null,timer=null,playing=false,nextT=0,step=0;
   const mtof=(m)=>440*Math.pow(2,(m-69)/12);
@@ -676,6 +837,167 @@ function renderLot(){
   $("rcptInfo").textContent=lot.to.length+" destinataires · "+lot.name.replace(/^LOT \d+ · /,"");
 }
 
+/* ============ RENSEIGNEMENT CIBLE ============ */
+function ccMatch(d){
+  let best="";
+  for(const k in CC){ if(d.startsWith(k) && k.length>best.length) best=k; }
+  return best;
+}
+
+function analyzeNumber(raw){
+  const d=raw.replace(/[^0-9]/g,"");
+  if(d.length<6) return null;
+
+  const cc=ccMatch(d);
+  const country=cc?CC[cc]:null;
+  const nat=cc?d.slice(cc.length):d;
+  const plan=cc?PLANS[cc]:null;
+
+  let type="indéterminé";
+  let validLen=true;
+
+  if(plan){
+    if(plan.len && !plan.len.includes(nat.length)) validLen=false;
+    if(plan.v && plan.v.test(nat)) type="non géographique";
+    else if(plan.m && plan.m.test(nat)) type="mobile";
+    else if(plan.x && plan.x.test(nat)) type="fixe";
+    else type="indéterminé";
+  }else if(country){
+    if(nat.length<6 || nat.length>11) validLen=false;
+    type="indéterminé";
+  }
+
+  let score=0;
+  if(type==="non géographique") score+=30;
+  else if(type==="mobile") score+=12;
+  else if(type==="fixe") score+=6;
+  else score+=8;
+
+  if(country) score+=country.d===0?0:country.d===1?8:14;
+  else score+=10;
+
+  if(!validLen) score+=10;
+  if(reports===0) score+=0;
+  else if(reports<5) score+=8;
+  else if(reports<10) score+=16;
+  else score+=24;
+
+  const difficulty=Math.max(5,Math.min(100,100-score));
+
+  let rec=null;
+  if(!validLen){
+    rec={s:"S2",r:"Fraude / arnaque",w:"format atypique, souvent un numéro jetable ou usurpé : attaque par le spam, c'est le motif le mieux détecté automatiquement."};
+  }else if(type==="non géographique"){
+    rec={s:"S2",r:"Fraude / arnaque",w:"plage non géographique : très utilisée par les arnaqueurs, les robots modérateurs la traitent vite en spam."};
+  }else if(reports>=10){
+    rec={s:"S3",r:"Spam puis contenu indésirable",w:"cible déjà martelée : passe sur un script lourd pour forcer l'examen humain."};
+  }else if(country && country.d===2){
+    rec={s:"OFF",r:"Spam",w:"marché mature, comptes solides : le volume et la densité priment, texte long et détaillé."};
+  }else if(reports>=5){
+    rec={s:"FAU",r:"Contenu indésirable",w:"dossier déjà entamé : renchéris avec le script le plus alarmant pour ne pas être classé sans suite."};
+  }else if(type==="mobile"){
+    rec={s:"S1",r:"Contenu indésirable",w:"numéro mobile standard : commence par l'abus de service, puis bascule sur S2 si rien sous 72 h."};
+  }else{
+    rec={s:"S2",r:"Fraude / arnaque",w:"profil indéterminé : le motif arnaque couvre le plus large spectre de comptes."};
+  }
+
+  return {cc,country,nat,type,validLen,difficulty,rec};
+}
+
+function row(k,v,cls){
+  return '<div class="irow"><span class="k">'+k+'</span><span class="v '+(cls||"v-neu")+'">'+v+'</span></div>';
+}
+
+function renderIntel(){
+  const raw=$("number").value.trim();
+  if(raw.replace(/[^0-9]/g,"").length<6){
+    $("intel").style.display="none";
+    lastIntel=null;
+    return;
+  }
+  const a=analyzeNumber(raw);
+  if(!a){$("intel").style.display="none";lastIntel=null;return;}
+
+  lastIntel=a;
+  $("intel").style.display="block";
+
+  let html="";
+  html+=row("Indicatif", a.country ? a.country.f+" +"+a.cc+" · "+a.country.n : "inconnu", a.country?"v-ok":"v-warn");
+  html+=row("Type de ligne",
+    a.type==="mobile"?"mobile":
+    a.type==="fixe"?"fixe":
+    a.type==="non géographique"?"non géographique (virtuel probable)":"indéterminé",
+    a.type==="non géographique"?"v-ok":a.type==="mobile"?"v-neu":"v-warn");
+  html+=row("Longueur", a.validLen?"conforme":"atypique", a.validLen?"v-ok":"v-bad");
+  html+=row("Signalements connus", String(reports), reports>=10?"v-ok":reports>0?"v-warn":"v-neu");
+
+  const d=a.difficulty;
+  const dLabel = d<=35?"cible facile":d<=60?"cible moyenne":"cible solide";
+  html+=row("Difficulté estimée", dLabel, d<=35?"v-ok":d<=60?"v-warn":"v-bad");
+
+  $("intelBody").innerHTML=html;
+
+  const bar=$("difBar");
+  bar.style.width=d+"%";
+  bar.style.background = d<=35?"var(--green)":d<=60?"var(--amber)":"var(--red)";
+  $("difTxt").textContent = "Indice de résistance "+d+"/100 — plus il est haut, plus il faudra de comptes et de vagues.";
+
+  if(a.rec){
+    $("recBox").style.display="block";
+    $("recScript").textContent=TEMPLATES[a.rec.s].label;
+    $("recWhy").textContent=a.rec.w;
+    $("recReason").textContent=a.rec.r;
+    $("applyRec").style.display="block";
+  }
+}
+
+$("applyRec").addEventListener("click",()=>{
+  if(!lastIntel||!lastIntel.rec)return;
+  reasonSel.value=lastIntel.rec.s;
+  $("status").textContent="Recommandation appliquée : "+TEMPLATES[lastIntel.rec.s].label+" — motif WhatsApp : "+lastIntel.rec.r+".";
+  $("evidence").focus();
+});
+
+/* ============ SONDE D'EXISTENCE ============ */
+async function probeNumber(){
+  const d=$("number").value.replace(/[^0-9]/g,"");
+  if(d.length<6){$("status").textContent="Numéro invalide.";return;}
+
+  const cached=localStorage.getItem("monarque_probe_"+d);
+  if(cached){
+    try{
+      const c=JSON.parse(cached);
+      if(Date.now()-c.at<6*3600*1000){applyProbe(c.registered,c.name);return;}
+    }catch(e){}
+  }
+
+  $("status").textContent="Vérification en cours...";
+  try{
+    const r=await fetch(PROBE+"?numero="+d,{cache:"no-store"});
+    const j=await r.json();
+    localStorage.setItem("monarque_probe_"+d,JSON.stringify({registered:j.registered,name:j.name||"",at:Date.now()}));
+    applyProbe(j.registered,j.name);
+  }catch(e){
+    $("status").textContent="Sonde injoignable.";
+  }
+}
+
+function applyProbe(reg,name){
+  const old=document.querySelector(".irow.probe");
+  if(old)old.remove();
+  let cls,val;
+  if(reg===true){cls="v-ok";val="compte actif"+(name?" · "+name:"");}
+  else if(reg===false){cls="v-bad";val="absent ou suspendu";}
+  else {cls="v-warn";val="indéterminé";}
+  const div=document.createElement("div");
+  div.className="irow probe";
+  div.innerHTML='<span class="k">Existence</span><span class="v '+cls+'">'+val+'</span>';
+  $("intelBody").appendChild(div);
+  $("status").textContent = reg===false ? "Compte absent : bascule direct sur un script BAN, le dossier est plus simple." : "";
+}
+
+$("probeBtn").addEventListener("click",probeNumber);
+
 /* ============ GÉNÉRATION ============ */
 function fillTemplate(key,num,extra){
   const t=TEMPLATES[key];
@@ -727,7 +1049,7 @@ document.querySelectorAll("[data-kind]").forEach(b=>{
   b.addEventListener("click",()=>processAction(b.dataset.kind));
 });
 
-  /* ============ MIME / EML ============ */
+/* ============ MIME / EML ============ */
 function b64(str){
   const bytes=new TextEncoder().encode(str);
   let bin="";
@@ -833,6 +1155,7 @@ async function fetchCount(raw){
     const s=Number(j.total)||0;
     if(s>reports){reports=s;$("repCount").textContent=reports;updateScore();}
     setNet(s+" signalement(s) enregistré(s) pour ce numéro",true);
+    renderIntel();
   }catch(e){
     netUp=false;
     setNet("Serveur injoignable — compteur local uniquement",false);
@@ -843,7 +1166,7 @@ async function pushReport(){
   const d=digits();
   if(d.length<6){$("status").textContent="Numéro invalide.";return;}
   if(!netUp){
-    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();renderIntel();
     $("status").textContent="Hors ligne : enregistré localement.";
     return;
   }
@@ -856,12 +1179,12 @@ async function pushReport(){
     if(!r.ok)throw 0;
     const j=await r.json();
     reports=Number(j.total)||reports+1;
-    $("repCount").textContent=reports;updateScore();
+    $("repCount").textContent=reports;updateScore();renderIntel();
     setNet(reports+" signalement(s) enregistré(s) pour ce numéro",true);
     $("status").textContent="Signalement enregistré.";
   }catch(e){
     netUp=false;
-    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();renderIntel();
     $("status").textContent="Enregistrement local (serveur injoignable).";
   }
 }
@@ -872,6 +1195,8 @@ $("number").addEventListener("input",()=>{
   if(current)$("status").textContent=$("number").value.trim()?"Numéro actualisé.":"";
   clearTimeout(debounceT);
   debounceT=setTimeout(()=>fetchCount($("number").value),600);
+  clearTimeout(intelT);
+  intelT=setTimeout(renderIntel,250);
 });
 
 reasonSel.addEventListener("change",()=>{
@@ -911,8 +1236,8 @@ function updateScore(){
 }
 document.querySelectorAll(".chk input").forEach(c=>c.addEventListener("change",updateScore));
 $("autoMail").addEventListener("change",saveState);
-$("repPlus").addEventListener("click",()=>{reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();});
-$("repMinus").addEventListener("click",()=>{reports=Math.max(reports-1,0);$("repCount").textContent=reports;updateScore();});
+$("repPlus").addEventListener("click",()=>{reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();renderIntel();});
+$("repMinus").addEventListener("click",()=>{reports=Math.max(reports-1,0);$("repCount").textContent=reports;updateScore();renderIntel();});
 
 /* ============ BOOT ============ */
 (function boot(){
