@@ -728,4 +728,201 @@ document.querySelectorAll("[data-kind]").forEach(b=>{
   b.addEventListener("click",()=>processAction(b.dataset.kind));
 }); 
 
-  
+  /* ============ MIME / EML ============ */
+function b64(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin="";
+  bytes.forEach(x=>{bin+=String.fromCharCode(x);});
+  return btoa(bin).replace(/.{76}/g,m=>m+"\r\n");
+}
+function encWord(str){
+  return "=?UTF-8?B?"+btoa(unescape(encodeURIComponent(str)))+"?=";
+}
+function digits(){
+  return $("number").value.replace(/[^0-9]/g,"");
+}
+function buildEml(to,subject,body){
+  const nl="\r\n";
+  const head=[
+    "X-Unsent: 1",
+    "To: "+to.join(", "),
+    "Subject: "+encWord(subject),
+    "Date: "+new Date().toUTCString(),
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64"
+  ].join(nl);
+  return head+nl+nl+b64(body);
+}
+function download(name,text){
+  const blob=new Blob([text],{type:"message/rfc822"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+$("dlEml").addEventListener("click",()=>{
+  if(!current){$("status").textContent="Génère d'abord un script.";return;}
+  const subject=$("subjPrev").textContent;
+  const body=$("body").value;
+  const num=digits()||"cible";
+  const lot=LOTS[lotIndex];
+  const name="MONARQUE_"+num+"_lot"+(lotIndex+1)+"_"+lot.tag+".eml";
+  download(name,buildEml(lot.to,subject,body));
+  $("status").textContent="Lot "+(lotIndex+1)+" téléchargé ("+lot.to.length+" destinataires).";
+  if(lotIndex<LOTS.length-1){lotIndex++;renderLot();}
+});
+
+$("openMailto").addEventListener("click",()=>{
+  if(!current){$("status").textContent="Génère d'abord un script.";return;}
+  openMail();
+  $("status").textContent="Gmail ouvert (contenu possiblement tronqué).";
+});
+
+/* ============ OUTILS ============ */
+$("copyBody").addEventListener("click",async()=>{
+  const t=$("body").value;if(!t)return;
+  try{await navigator.clipboard.writeText(t);$("status").textContent="Texte copié.";}
+  catch(e){$("body").select();$("status").textContent="Sélectionne puis Ctrl+C.";}
+});
+$("copyRcpt").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(LOTS[lotIndex].to.join(", "));$("status").textContent="Destinataires du lot copiés.";}
+  catch(e){$("status").textContent="Copie impossible.";}
+});
+$("openWa").addEventListener("click",()=>{
+  const d=digits();
+  if(!d){$("status").textContent="Numéro manquant.";return;}
+  window.open("https://api.whatsapp.com/send?phone="+d,"_blank");
+});
+$("openWaBiz").addEventListener("click",()=>{
+  const d=digits();
+  if(!d){$("status").textContent="Numéro manquant.";return;}
+  window.open("https://wa.me/message/"+d,"_blank");
+});
+$("appType").addEventListener("change",()=>{
+  if($("appType").value==="BUSINESS"&&lotIndex!==2){lotIndex=2;renderLot();}
+});
+$("musicBtn").addEventListener("click",()=>{
+  Music.toggle();$("musicBtn").classList.toggle("on",Music.isPlaying());
+});
+$("lockBtn").addEventListener("click",()=>{
+  try{sessionStorage.removeItem("monarque_ok");}catch(e){}
+  Music.stop();$("musicBtn").classList.remove("on");
+  $("wrap").classList.add("hidden");$("lock").classList.remove("hidden");
+  $("pass").value="";$("pass").focus();
+});
+
+/* ============ SYNCHRO SERVEUR ============ */
+function setNet(msg,ok){
+  const el=$("netInfo");
+  el.textContent=msg||"";
+  el.style.color=ok?"#00ff9d":"#ffb020";
+}
+
+async function fetchCount(raw){
+  const d=raw.replace(/[^0-9]/g,"");
+  if(d.length<6){setNet("");return;}
+  try{
+    const r=await fetch(API+"?numero="+d,{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    netUp=true;
+    const s=Number(j.total)||0;
+    if(s>reports){reports=s;$("repCount").textContent=reports;updateScore();}
+    setNet(s+" signalement(s) enregistré(s) pour ce numéro",true);
+  }catch(e){
+    netUp=false;
+    setNet("Serveur injoignable — compteur local uniquement",false);
+  }
+}
+
+async function pushReport(){
+  const d=digits();
+  if(d.length<6){$("status").textContent="Numéro invalide.";return;}
+  if(!netUp){
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    $("status").textContent="Hors ligne : enregistré localement.";
+    return;
+  }
+  try{
+    const r=await fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({numero:d,motif:reasonSel.value||"inconnu"})
+    });
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    reports=Number(j.total)||reports+1;
+    $("repCount").textContent=reports;updateScore();
+    setNet(reports+" signalement(s) enregistré(s) pour ce numéro",true);
+    $("status").textContent="Signalement enregistré.";
+  }catch(e){
+    netUp=false;
+    reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();
+    $("status").textContent="Enregistrement local (serveur injoignable).";
+  }
+}
+
+$("reportBtn").addEventListener("click",pushReport);
+
+$("number").addEventListener("input",()=>{
+  if(current)$("status").textContent=$("number").value.trim()?"Numéro actualisé.":"";
+  clearTimeout(debounceT);
+  debounceT=setTimeout(()=>fetchCount($("number").value),600);
+});
+
+reasonSel.addEventListener("change",()=>{
+  const k=reasonSel.value;if(!k){$("status").textContent="";return;}
+  $("status").textContent=TEMPLATES[k].kind==="BAN"?"Script BAN prêt.":"Script UNBAN prêt.";
+});
+
+/* ============ PROTOCOLE ============ */
+function loadState(){
+  try{
+    reports=parseInt(localStorage.getItem("monarque_rep")||"0",10)||0;
+    document.querySelectorAll(".chk input").forEach(c=>{
+      c.checked=localStorage.getItem("monarque_"+c.dataset.p)==="1";
+    });
+    const am=localStorage.getItem("monarque_automail");
+    if(am!==null)$("autoMail").checked=am==="1";
+  }catch(e){}
+  $("repCount").textContent=reports;
+  updateScore();
+}
+function saveState(){
+  try{
+    localStorage.setItem("monarque_rep",reports);
+    localStorage.setItem("monarque_automail",$("autoMail").checked?"1":"0");
+    document.querySelectorAll(".chk input").forEach(c=>{
+      localStorage.setItem("monarque_"+c.dataset.p,c.checked?"1":"0");
+    });
+  }catch(e){}
+}
+function updateScore(){
+  const done=[...document.querySelectorAll(".chk input")].filter(c=>c.checked).length;
+  const pct=Math.round((done/6)*60+Math.min(reports,10)/10*40);
+  $("scoreBar").style.width=pct+"%";
+  $("scoreTxt").innerHTML="PRÉPARATION : <b>"+pct+" %</b>";
+  $("scoreMini").textContent=pct+" %";
+  saveState();
+}
+document.querySelectorAll(".chk input").forEach(c=>c.addEventListener("change",updateScore));
+$("autoMail").addEventListener("change",saveState);
+$("repPlus").addEventListener("click",()=>{reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();});
+$("repMinus").addEventListener("click",()=>{reports=Math.max(reports-1,0);$("repCount").textContent=reports;updateScore();});
+
+/* ============ BOOT ============ */
+(function boot(){
+  renderLot();
+  loadState();
+  let ok=false;
+  try{ok=sessionStorage.getItem("monarque_ok")==="1";}catch(e){}
+  if(ok)openApp(true);else $("pass").focus();
+})();
+</script>
+</body>
+</html>
