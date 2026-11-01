@@ -178,7 +178,7 @@ details[open] .body-in{padding-top:4px}
     <h1>Monarque ban</h1>
     <p class="lock-sub">Accès restreint</p>
     <input id="pass" type="password" placeholder="••••••" autocomplete="current-password" autofocus>
-    <button id="unlock" type="button">Déverrouiller</button>
+    <button id="unlock" type="button" onclick="tryUnlock()">Déverrouiller</button>
     <p id="lockMsg"></p>
     <div class="lock-foot">DARK JUSTICE SYSTEM</div>
   </div>
@@ -314,13 +314,54 @@ details[open] .body-in{padding-top:4px}
       </div>
   
 <script>
+/* NOYAU — verrou et diagnostics, isolé du script principal */
 "use strict";
-
-/* ============ CONFIG ============ */
 const PASSWORD = "Momo94";
+const $ = (id) => document.getElementById(id);
+
+window.addEventListener("error", function (e) {
+  const m = document.getElementById("lockMsg");
+  const lock = document.getElementById("lock");
+  if (!m || !lock || lock.classList.contains("hidden")) return;
+  m.style.color = "#ffb020";
+  m.style.fontSize = "10px";
+  m.textContent = "ERREUR SCRIPT : " + (e.message || "inconnue");
+});
+
+function lockFail() {
+  const m = $("lockMsg");
+  m.style.color = "var(--red)";
+  m.style.fontSize = "";
+  m.textContent = "ACCÈS REFUSÉ";
+  const c = $("lockCard");
+  c.classList.remove("shake");
+  void c.offsetWidth;
+  c.classList.add("shake");
+  $("pass").value = "";
+  $("pass").focus();
+}
+
+window.tryUnlock = function () {
+  const v = ($("pass").value || "").trim();
+  if (v !== PASSWORD) { lockFail(); return; }
+  try { sessionStorage.setItem("monarque_ok", "1"); } catch (e) {}
+  $("lock").classList.add("hidden");
+  $("wrap").classList.remove("hidden");
+  $("lockMsg").textContent = "";
+  try { if (typeof openApp === "function") openApp(false); } catch (e) {}
+  try { $("number").focus(); } catch (e) {}
+};
+
+$("unlock").addEventListener("click", function () { window.tryUnlock(); });
+$("pass").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") { e.preventDefault(); window.tryUnlock(); }
+});
+</script>
+
+<script>
+"use strict";
 const API = "/api/signaler";
 const PROBE = "/api/probe";
-const $ = (id) => document.getElementById(id);
 
 /* ============ SCRIPTS ============ */
 const TEMPLATES = {
