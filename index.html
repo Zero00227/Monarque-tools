@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#03060f">
 <title>MONARQUE BAN — DARK JUSTICE</title>
 <style>
 :root{
@@ -19,8 +20,10 @@ body{
     radial-gradient(ellipse 60% 50% at 90% 110%, #0a1a35 0%, transparent 55%),
     var(--bg);
   color:var(--text);font-family:'Inter','Segoe UI',Roboto,sans-serif;
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;padding:20px;overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  min-height:100vh;min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -44,7 +47,7 @@ body::before{
 }
 .lock-card h1{color:#fff;font-size:19px;letter-spacing:4px;margin:14px 0 4px;text-transform:uppercase}
 .lock-sub{font-size:9.5px;color:var(--dim);letter-spacing:3px;margin:0 0 24px;font-weight:700}
-#pass{width:100%;padding:14px;background:#050b16;border:1px solid var(--line);border-radius:8px;color:#fff;font-size:15px;letter-spacing:3px;text-align:center;outline:none;transition:.25s;font-family:inherit}
+#pass{width:100%;padding:14px;background:#050b16;border:1px solid var(--line);border-radius:8px;color:#fff;font-size:16px;letter-spacing:3px;text-align:center;outline:none;transition:.25s;font-family:inherit}
 #pass:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.35)}
 #unlock{width:100%;margin-top:14px;padding:14px;border:1.5px solid var(--cyan);border-radius:8px;background:rgba(0,162,255,.1);color:#fff;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.25s;font-family:inherit}
 #unlock:hover{background:var(--cyan);color:#001018;box-shadow:0 0 26px rgba(0,229,255,.7)}
@@ -53,62 +56,62 @@ body::before{
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
 .lock-foot{font-size:9.5px;color:#31527a;letter-spacing:2px;margin-top:20px}
 
-.wrap{width:100%;max-width:490px;position:relative;z-index:2}
-.card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1.5px solid var(--neon);border-radius:14px;padding:26px 22px;position:relative;overflow:hidden;animation:edge 4s infinite ease-in-out}
+.wrap{width:100%;max-width:490px;margin:auto;padding:20px 16px calc(48px + env(safe-area-inset-bottom));position:relative;z-index:2}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1.5px solid var(--neon);border-radius:14px;padding:22px 18px;position:relative;overflow:hidden;animation:edge 4s infinite ease-in-out}
 .card::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:sweep 3.5s linear infinite}
-@keyframes sweep{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(700px);opacity:0}}
-.top{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:2px;color:#3b5f8a;margin-bottom:14px;font-weight:700}
+@keyframes sweep{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(900px);opacity:0}}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:2px;color:#3b5f8a;margin-bottom:12px;font-weight:700}
 .led{color:var(--green);display:inline-flex;align-items:center;gap:5px}
 .led::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.4s steps(1) infinite}
 @keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.15}}
-h1.title{color:#fff;font-size:22px;letter-spacing:3.5px;margin:0 0 4px;text-align:center;text-transform:uppercase;animation:flicker 6s infinite}
+h1.title{color:#fff;font-size:21px;letter-spacing:3px;margin:0 0 4px;text-align:center;text-transform:uppercase;animation:flicker 6s infinite}
 h1.title span{color:var(--cyan)}
-.sub{font-size:9px;color:#3b5f8a;letter-spacing:4px;margin-bottom:22px;font-weight:800;text-align:center}
+.sub{font-size:9px;color:#3b5f8a;letter-spacing:4px;margin-bottom:18px;font-weight:800;text-align:center}
 label{display:block;text-align:left;font-size:10px;letter-spacing:1.4px;color:var(--dim);margin-bottom:6px;margin-left:2px;font-weight:700;text-transform:uppercase}
-input,select,textarea{width:100%;padding:12px;margin-bottom:14px;background:#050b16;border:1px solid var(--line);color:#fff;border-radius:7px;outline:none;transition:.25s;font-family:inherit;font-size:13.5px}
+input,select,textarea{width:100%;padding:12px;margin-bottom:12px;background:#050b16;border:1px solid var(--line);color:#fff;border-radius:7px;outline:none;transition:.25s;font-family:inherit;font-size:16px}
 input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.28)}
 select{appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
-textarea{resize:vertical;min-height:64px;line-height:1.5}
-.row{display:flex;gap:12px;margin-top:4px}
-.btn{flex:1;padding:14px;cursor:pointer;border-radius:7px;border:1.5px solid transparent;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:transparent;color:#fff;transition:.25s;font-family:inherit}
+textarea{resize:vertical;min-height:60px;line-height:1.5}
+.row{display:flex;gap:10px;margin-top:4px}
+.btn{flex:1;padding:14px 8px;cursor:pointer;border-radius:7px;border:1.5px solid transparent;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;background:transparent;color:#fff;transition:.25s;font-family:inherit}
 .ban{border-color:var(--red);background:rgba(255,31,61,.08);animation:pulseRed 2.2s infinite ease-in-out}
 @keyframes pulseRed{0%,100%{box-shadow:0 0 6px rgba(255,31,61,.3);border-color:rgba(255,31,61,.55)}50%{box-shadow:0 0 22px rgba(255,31,61,.85);border-color:var(--red)}}
-.ban:hover{background:var(--red);color:#14020a}
+.ban:hover,.ban:active{background:var(--red);color:#14020a}
 .unban{border-color:var(--green);background:rgba(0,255,157,.07);animation:pulseGreen 2.2s infinite ease-in-out}
 @keyframes pulseGreen{0%,100%{box-shadow:0 0 6px rgba(0,255,157,.3);border-color:rgba(0,255,157,.55)}50%{box-shadow:0 0 22px rgba(0,255,157,.8);border-color:var(--green)}}
-.unban:hover{background:var(--green);color:#00140c}
+.unban:hover,.unban:active{background:var(--green);color:#00140c}
 
-.panel{background:#060c17;border:1px solid #142b4d;border-radius:9px;padding:13px;margin-bottom:14px}
+.panel{background:#060c17;border:1px solid #142b4d;border-radius:9px;padding:12px;margin-bottom:12px}
 .panel h3{margin:0 0 10px;font-size:10.5px;letter-spacing:1.6px;color:var(--cyan);text-transform:uppercase}
-.out{display:none;margin-top:18px;border-top:1px dashed #1b3459;padding-top:15px}
+.out{display:none;margin-top:16px;border-top:1px dashed #1b3459;padding-top:14px}
 .out label{color:var(--cyan)}
-.prev{background:#02060d;border:1px solid #142b4d;border-radius:6px;padding:10px;font-size:11.5px;color:var(--cyan);margin-bottom:11px;word-break:break-word;font-weight:700}
-#body{min-height:120px;background:#02060d;color:#9fc0e6;font-size:12px}
+.prev{background:#02060d;border:1px solid #142b4d;border-radius:6px;padding:10px;font-size:11.5px;color:var(--cyan);margin-bottom:10px;word-break:break-word;font-weight:700}
+#body{min-height:110px;background:#02060d;color:#9fc0e6;font-size:13px}
 .mini{display:flex;gap:8px;margin-top:4px}
-.mini button{flex:1;padding:11px;font-size:9.5px;letter-spacing:1.1px;font-weight:800;text-transform:uppercase;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--text);cursor:pointer;transition:.2s;font-family:inherit}
-.mini button:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.3)}
-.primary{display:block;width:100%;text-align:center;text-decoration:none;padding:15px;margin-top:10px;border:0;border-radius:7px;background:var(--cyan);color:#001019;font-weight:900;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;transition:.25s;font-family:inherit}
-.primary:hover{box-shadow:0 0 28px rgba(0,229,255,.8)}
-.ghost{display:block;width:100%;text-align:center;text-decoration:none;padding:12px;margin-top:8px;border:1px solid #1d3a63;border-radius:7px;background:#070f1d;color:var(--dim);font-weight:800;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:.2s}
-.ghost:hover{color:var(--cyan);border-color:var(--cyan)}
-.hint{font-size:10px;color:#3b5f8a;margin:8px 0 0;line-height:1.55}
+.mini button{flex:1;padding:11px 6px;font-size:9.5px;letter-spacing:1px;font-weight:800;text-transform:uppercase;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--text);cursor:pointer;transition:.2s;font-family:inherit}
+.mini button:hover,.mini button:active{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.3)}
+.primary{display:block;width:100%;text-align:center;text-decoration:none;padding:15px;margin-top:10px;border:0;border-radius:7px;background:var(--cyan);color:#001019;font-weight:900;font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;transition:.25s;font-family:inherit}
+.primary:hover,.primary:active{box-shadow:0 0 28px rgba(0,229,255,.8)}
+.ghost{display:block;width:100%;text-align:center;text-decoration:none;padding:12px 8px;margin-top:8px;border:1px solid #1d3a63;border-radius:7px;background:#070f1d;color:var(--dim);font-weight:800;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:.2s}
+.ghost:hover,.ghost:active{color:var(--cyan);border-color:var(--cyan)}
+.hint{font-size:10px;color:#3b5f8a;margin:8px 0 0;line-height:1.5}
 .hint b{color:#5b86bd}
 .batches{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
-.batches button{padding:9px 4px;font-size:9.5px;font-weight:800;letter-spacing:.6px;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--dim);cursor:pointer;font-family:inherit;transition:.2s}
+.batches button{padding:9px 2px;font-size:9.5px;font-weight:800;letter-spacing:.4px;background:#0a1424;border:1px solid #1d3a63;border-radius:6px;color:var(--dim);cursor:pointer;font-family:inherit;transition:.2s}
 .batches button:hover{border-color:var(--cyan);color:var(--cyan)}
 .batches button.sel{background:rgba(0,162,255,.16);border-color:var(--cyan);color:#fff;box-shadow:0 0 14px rgba(0,229,255,.4)}
 
-.chk{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid #0e1e34;cursor:pointer}
+.chk{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid #0e1e34;cursor:pointer}
 .chk:last-of-type{border-bottom:0}
 .chk input{appearance:none;width:17px;height:17px;flex:0 0 17px;margin:1px 0 0;background:#040a14;border:1.5px solid #22456e;border-radius:4px;cursor:pointer;transition:.2s;position:relative}
 .chk input:checked{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(0,255,157,.6)}
 .chk input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#00140c;font-size:12px;font-weight:900}
-.chk span{font-size:11px;line-height:1.45;color:#8fb0d6}
+.chk span{font-size:11px;line-height:1.4;color:#8fb0d6}
 .chk input:checked + span{color:#3f6a4f;text-decoration:line-through}
-.counter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;background:#040a14;border:1px solid #142b4d;border-radius:7px;padding:9px 11px}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;background:#040a14;border:1px solid #142b4d;border-radius:7px;padding:9px 11px}
 .counter .lab{font-size:10px;letter-spacing:1px;color:var(--dim);font-weight:700;text-transform:uppercase}
 .counter .ctl{display:flex;align-items:center;gap:9px}
-.counter button{width:28px;height:28px;border-radius:6px;border:1px solid #1d3a63;background:#0a1424;color:#fff;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit;line-height:1}
+.counter button{width:30px;height:30px;border-radius:6px;border:1px solid #1d3a63;background:#0a1424;color:#fff;font-weight:900;font-size:16px;cursor:pointer;font-family:inherit;line-height:1}
 .counter button:hover{border-color:var(--cyan);color:var(--cyan)}
 #repCount{font-size:15px;font-weight:900;color:var(--green);min-width:26px;text-align:center}
 .bar{height:5px;background:#0d1c30;border-radius:3px;overflow:hidden;margin-top:10px}
@@ -117,15 +120,35 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 #scoreTxt b{color:var(--amber)}
 #netInfo{font-size:10px;margin-top:8px;min-height:13px;font-weight:700}
 
-.tools{display:flex;gap:8px;margin-top:14px}
-.tools button{flex:1;padding:11px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;background:#060d1a;border:1px solid #16304f;border-radius:6px;color:var(--dim);cursor:pointer;transition:.2s;font-family:inherit}
-.tools button:hover{color:var(--cyan);border-color:var(--cyan)}
+.tools{display:flex;gap:8px;margin-top:12px}
+.tools button{flex:1;padding:11px 4px;font-size:9.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:#060d1a;border:1px solid #16304f;border-radius:6px;color:var(--dim);cursor:pointer;transition:.2s;font-family:inherit}
+.tools button:hover{border-color:var(--cyan);color:var(--cyan)}
 .tools button.on{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.4)}
-#status{font-size:11px;text-align:center;margin-top:12px;font-weight:700;letter-spacing:1px;color:var(--cyan);min-height:14px}
-.foot{font-size:10px;color:#2a476d;margin-top:20px;font-style:italic;text-align:center}
-details summary{font-size:10px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase;font-weight:800;cursor:pointer;padding:4px 0}
+#status{font-size:11px;text-align:center;margin-top:10px;font-weight:700;letter-spacing:1px;color:var(--cyan);min-height:14px}
+.foot{font-size:10px;color:#2a476d;margin-top:18px;font-style:italic;text-align:center}
+
+details summary{font-size:10px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase;font-weight:800;cursor:pointer;padding:2px 0;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:" +";color:var(--cyan)}
+details[open] summary::after{content:" −"}
 details[open] summary{color:var(--cyan);margin-bottom:8px}
-@media (max-width:420px){.card{padding:20px 15px}h1.title{font-size:18px;letter-spacing:2px}}
+details[open] .body-in{padding-top:4px}
+
+.switch{display:flex;align-items:center;gap:9px;margin-top:10px;cursor:pointer}
+.switch input{appearance:none;width:34px;height:19px;flex:0 0 34px;margin:0;background:#0d1c30;border:1px solid #1d3a63;border-radius:20px;position:relative;cursor:pointer;transition:.2s}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#4a6d95;transition:.2s}
+.switch input:checked{background:rgba(0,229,255,.25);border-color:var(--cyan)}
+.switch input:checked::after{left:17px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.switch span{font-size:10.5px;color:#8fb0d6}
+
+@media (max-width:420px){
+  .wrap{padding:14px 12px calc(40px + env(safe-area-inset-bottom))}
+  .card{padding:18px 14px}
+  h1.title{font-size:18px;letter-spacing:2px}
+  .sub{margin-bottom:14px}
+  input,select,textarea{padding:11px;margin-bottom:11px}
+  .prev{font-size:11px}
+}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important}}
 </style>
 </head>
@@ -145,15 +168,15 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
 
 <div class="wrap hidden" id="wrap">
   <div class="card">
-    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.1</span></div>
+    <div class="top"><span class="led">SYSTEM ONLINE</span><span>v3.2</span></div>
 
-    <h1 class="title">Monarque <span>Tools</span></h1>
+    <h1 class="title">Monarque <span>ban</span></h1>
     <div class="sub">System Administration</div>
 
     <label for="number">Numéro de la cible</label>
     <input id="number" type="text" placeholder="+227XXXXXXXX" inputmode="tel">
     <p class="hint">La variable <b>{NUM}</b> est remplacée automatiquement. Format international obligatoire.</p>
-    <div class="mini" style="margin-bottom:14px">
+    <div class="mini" style="margin:8px 0 12px">
       <button type="button" id="openWa">Ouvrir la discussion</button>
       <button type="button" id="openWaBiz">Version Business</button>
     </div>
@@ -171,9 +194,14 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
     <textarea id="evidence" placeholder="Ex: liens de groupe, horodatages, captures..."></textarea>
 
     <div class="row">
-      <button class="ban" type="button" data-kind="BAN">Générer Ban</button>
-      <button class="unban" type="button" data-kind="UNBAN">Générer Unban</button>
+      <button class="btn ban" type="button" data-kind="BAN">Générer Ban</button>
+      <button class="btn unban" type="button" data-kind="UNBAN">Générer Unban</button>
     </div>
+
+    <label class="switch">
+      <input type="checkbox" id="autoMail" checked>
+      <span>Ouvrir Gmail automatiquement après génération</span>
+    </label>
 
     <p id="status"></p>
 
@@ -196,49 +224,53 @@ details[open] summary{color:var(--cyan);margin-bottom:8px}
       </div>
 
       <button class="primary" type="button" id="dlEml">Télécharger le mail (.eml)</button>
-      <button class="ghost" type="button" id="openMailto">Ouvrir dans le client mail (raccourci)</button>
+      <button class="ghost" type="button" id="openMailto">Ouvrir dans Gmail (raccourci)</button>
       <p class="hint">Le <b>.eml</b> conserve l'intégralité du texte, les accents et les emoji. Le raccourci mailto peut tronquer les longs messages.</p>
     </div>
 
-    <div class="panel" style="margin-top:18px">
-      <h3>Protocole de restriction</h3>
-      <p class="hint" style="margin-top:0">Le mail ne suffit pas : ce sont les signalements depuis plusieurs comptes qui déclenchent la restriction automatique.</p>
+    <details class="panel" style="margin-top:16px">
+      <summary>Protocole de restriction <span id="scoreMini" style="color:var(--amber)">0 %</span></summary>
+      <div class="body-in">
+        <p class="hint" style="margin-top:0">Le mail ne suffit pas : ce sont les signalements depuis plusieurs comptes qui déclenchent la restriction automatique.</p>
 
-      <label class="chk"><input type="checkbox" data-p="p1"><span>Signaler le contact depuis un 1<sup>er</sup> compte (profil → Signaler)</span></label>
-      <label class="chk"><input type="checkbox" data-p="p2"><span>Répéter depuis un 2<sup>e</sup> compte</span></label>
-      <label class="chk"><input type="checkbox" data-p="p3"><span>Répéter depuis un 3<sup>e</sup> compte</span></label>
-      <label class="chk"><input type="checkbox" data-p="p4"><span>Signaler le profil Business si le compte en a un</span></label>
-      <label class="chk"><input type="checkbox" data-p="p5"><span>Signaler un statut ou un message précis du contact</span></label>
-      <label class="chk"><input type="checkbox" data-p="p6"><span>Envoyer les 4 lots de mails ci-dessus</span></label>
+        <label class="chk"><input type="checkbox" data-p="p1"><span>Signaler le contact depuis un 1<sup>er</sup> compte (profil → Signaler)</span></label>
+        <label class="chk"><input type="checkbox" data-p="p2"><span>Répéter depuis un 2<sup>e</sup> compte</span></label>
+        <label class="chk"><input type="checkbox" data-p="p3"><span>Répéter depuis un 3<sup>e</sup> compte</span></label>
+        <label class="chk"><input type="checkbox" data-p="p4"><span>Signaler le profil Business si le compte en a un</span></label>
+        <label class="chk"><input type="checkbox" data-p="p5"><span>Signaler un statut ou un message précis du contact</span></label>
+        <label class="chk"><input type="checkbox" data-p="p6"><span>Envoyer les 4 lots de mails ci-dessus</span></label>
 
-      <div class="counter">
-        <span class="lab">Comptes ayant signalé</span>
-        <span class="ctl">
-          <button type="button" id="repMinus">−</button>
-          <span id="repCount">0</span>
-          <button type="button" id="repPlus">+</button>
-        </span>
+        <div class="counter">
+          <span class="lab">Comptes ayant signalé</span>
+          <span class="ctl">
+            <button type="button" id="repMinus">−</button>
+            <span id="repCount">0</span>
+            <button type="button" id="repPlus">+</button>
+          </span>
+        </div>
+
+        <button class="ghost" type="button" id="reportBtn">Enregistrer un signalement</button>
+        <p id="netInfo"></p>
+
+        <div class="bar"><i id="scoreBar"></i></div>
+        <p id="scoreTxt">PRÉPARATION : <b>0 %</b></p>
       </div>
-
-      <button class="ghost" type="button" id="reportBtn">Enregistrer un signalement</button>
-      <p id="netInfo"></p>
-
-      <div class="bar"><i id="scoreBar"></i></div>
-      <p id="scoreTxt">PRÉPARATION : <b>0 %</b></p>
-    </div>
+    </details>
 
     <details class="panel">
       <summary>Procédure exacte, écran par écran</summary>
-      <p class="hint" style="margin-top:0">
-        1. Ouvre la discussion avec le numéro (bouton « Ouvrir la discussion »).<br>
-        2. Touche son nom en haut → descends → <b>Signaler le contact</b>.<br>
-        3. Choisis le motif le plus proche (spam, arnaque, contenu indésirable).<br>
-        4. Valide. Ne bloque pas le contact tout de suite : bloquer réduit le poids du signalement.<br>
-        5. Recommence avec un autre compte, dans les mêmes 24 à 48 h.<br>
-        6. Envoie ensuite les mails, un lot à la fois, avec le .eml.<br>
-        7. Si le compte est Business, signale aussi depuis son profil Business.<br>
-        8. Pour un compte déjà suspendu, utilise le script UNBAN et cible uniquement le lot 1.
-      </p>
+      <div class="body-in">
+        <p class="hint" style="margin-top:0">
+          1. Ouvre la discussion avec le numéro (bouton « Ouvrir la discussion »).<br>
+          2. Touche son nom en haut → descends → <b>Signaler le contact</b>.<br>
+          3. Choisis le motif le plus proche (spam, arnaque, contenu indésirable).<br>
+          4. Valide. Ne bloque pas le contact tout de suite : bloquer réduit le poids du signalement.<br>
+          5. Recommence avec un autre compte, dans les mêmes 24 à 48 h.<br>
+          6. Envoie ensuite les mails, un lot à la fois, avec le .eml.<br>
+          7. Si le compte est Business, signale aussi depuis son profil Business.<br>
+          8. Pour un compte déjà suspendu, utilise le script UNBAN et cible uniquement le lot 1.
+        </p>
+      </div>
     </details>
 
     <div class="tools">
@@ -258,7 +290,7 @@ const PASSWORD = "Momo94";
 const API = "/api/signaler";
 const $ = (id) => document.getElementById(id);
 
-/* ============ SCRIPTS ============ */
+     /* ============ SCRIPTS ============ */
 const TEMPLATES = {
   S1:{kind:"BAN",label:"BAN : Abus de service et Spam",
   subject:"Emergency: Abuse and Spam report regarding {NUM}",
@@ -322,7 +354,7 @@ Regards.`},
 
 {EXTRA}`},
 
- S3:{kind:"BAN",label:"BAN : CSAM et Enlèvement",
+  S3:{kind:"BAN",label:"BAN : CSAM et Enlèvement",
   subject:"URGENT: Child Sexual Abuse Material (CSAM) and Kidnapping Threat {NUM}",
   body:`Dear Support,
 
@@ -390,7 +422,7 @@ Sincerely,
 
 {EXTRA}`},
 
-  CHI:{kind:"BAN",label:"BAN : Z Chine Off",
+  CHI:{kind:"BAN",label:"BAN : D Chine Off",
   subject:"URGENT: Organized Crime, Organ Traffic and CSAM — {NUM}",
   body:`Olá, eu sou Meiro Blaze 😝 Gostaria de falar sobre meu irmão, Maestro Bruno 🎭 ☡ Contact {NUM}
 
@@ -456,7 +488,7 @@ https://web.whatsapp.com/send?phone={NUM}
 
 {EXTRA}`},
 
-  OFF:{kind:"BAN",label:"BAN : Z Off",
+  OFF:{kind:"BAN",label:"BAN : D Off",
   subject:"URGENT: Mass Abuse, Piracy and Fraud — {NUM}",
   body:`👺 நான் உன்னை ஃபக் பண்றேன் 😘🤑 நான் உன் சின்ன தங்கையை ஃபக் பண்றேன் 👅🥵 நான் ஒரு வாட்ஸ்அப் ஃபக்கர்🥵🫦 நான் வாட்ஸ்அப் செக்ஸ் வாழ்க்கையில ஒரு ராஜா 👅🫦🥵🥵 என்னோட செக்ஸ்க்கு வா 🥵👺 700$ மட்டும் 💰🤑 நான் உன் வீடியோக்களை "டார்க் வெப்"ல அப்லோட் பண்ண மாட்டேன் சரி ப்ளீஸ் வீடியோ காலில் 10 நிமிஷத்துல மட்டும் வா 👺🥵👅 நான் ஃபக் பண்றேன் குழந்தைகளை ஃபக் பண்றேன் நான் சில குழந்தைகளை ஃபக் பண்றேன் 🥵👇👇👇👇
 
@@ -546,28 +578,28 @@ const Music = (() => {
     ac=new AC();
     master=ac.createGain();master.gain.value=0.0001;master.connect(ac.destination);
     delay=ac.createDelay(1);delay.delayTime.value=0.28;
-    const fb=ac.createGain();fb.gain.value=0.33;delay.connect(fb);fb.connect(delay);
-    const wet=ac.createGain();wet.gain.value=0.32;delay.connect(wet);wet.connect(master);
+    const fb=ac.createGain();fb.gain.value=0.34;delay.connect(fb);fb.connect(delay);
+    const wet=ac.createGain();wet.gain.value=0.35;delay.connect(wet);wet.connect(master);
   }
   function pad(t,f){
-    const fl=ac.createBiquadFilter();fl.type="lowpass";fl.frequency.value=640;fl.Q.value=6;fl.connect(master);
-    [0,-7].forEach(d=>{
+    const fl=ac.createBiquadFilter();fl.type="lowpass";fl.frequency.value=780;fl.Q.value=6;fl.connect(master);
+    [0,-8].forEach(d=>{
       const o=ac.createOscillator();o.type="sawtooth";o.frequency.value=f;o.detune.value=d;
       const g=ac.createGain();
-      g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.075,t+1.2);g.gain.linearRampToValueAtTime(0.0001,t+3.2);
+      g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.15,t+1.2);g.gain.linearRampToValueAtTime(0.0001,t+3.2);
       o.connect(g);g.connect(fl);o.start(t);o.stop(t+3.3);
     });
   }
   function bass(t,f){
     const o=ac.createOscillator();o.type="sine";o.frequency.value=f;
     const g=ac.createGain();
-    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.16,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.62);
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.32,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+0.62);
     o.connect(g);g.connect(master);o.start(t);o.stop(t+0.66);
   }
   function pluck(t,f){
     const o=ac.createOscillator();o.type="triangle";o.frequency.value=f;
     const g=ac.createGain();
-    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.085,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+0.5);
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.19,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+0.5);
     o.connect(g);g.connect(master);g.connect(delay);o.start(t);o.stop(t+0.55);
   }
   function tick(t,s){
@@ -579,23 +611,27 @@ const Music = (() => {
   function start(){
     if(playing)return;
     if(!ac)init();
-    ac.resume();
+    if(ac.state==="suspended")ac.resume();
     master.gain.cancelScheduledValues(ac.currentTime);
     master.gain.setValueAtTime(0.0001,ac.currentTime);
-    master.gain.linearRampToValueAtTime(0.2,ac.currentTime+2.2);
+    master.gain.linearRampToValueAtTime(0.5,ac.currentTime+1.6);
     playing=true;step=0;nextT=ac.currentTime+0.12;
-    timer=setInterval(sched,120);
+    clearInterval(timer);timer=setInterval(sched,120);
   }
   function stop(){
     if(!playing)return;
     playing=false;clearInterval(timer);timer=null;
     master.gain.cancelScheduledValues(ac.currentTime);
     master.gain.setValueAtTime(master.gain.value,ac.currentTime);
-    master.gain.linearRampToValueAtTime(0.0001,ac.currentTime+0.7);
-    setTimeout(()=>{if(!playing&&ac)ac.suspend();},800);
+    master.gain.linearRampToValueAtTime(0.0001,ac.currentTime+0.6);
+    setTimeout(()=>{if(!playing&&ac&&ac.state==="running")ac.suspend();},700);
   }
-  return {toggle(){playing?stop():start();return playing;},start,stop,isPlaying:()=>playing};
+  function resume(){ if(ac&&playing&&ac.state==="suspended")ac.resume(); }
+  return {toggle(){playing?stop():start();return playing;},start,stop,resume,isPlaying:()=>playing};
 })();
+
+document.addEventListener("pointerdown",()=>Music.resume(),{passive:true});
+document.addEventListener("touchstart",()=>Music.resume(),{passive:true});
 
 /* ============ VERROU ============ */
 function openApp(restore){
@@ -603,8 +639,8 @@ function openApp(restore){
   $("wrap").classList.remove("hidden");
   $("lockMsg").textContent="";
   Music.start();
-  if(Music.isPlaying())$("musicBtn").classList.add("on");
-  if(restore)setTimeout(()=>{if(!Music.isPlaying())$("musicBtn").classList.add("on");},300);
+  $("musicBtn").classList.add("on");
+  if(restore)setTimeout(()=>{Music.resume();},150);
   $("number").focus();
 }
 function tryUnlock(){
@@ -649,6 +685,14 @@ function fillTemplate(key,num,extra){
   return {subject:clean(t.subject),body:clean(t.body)};
 }
 
+function openMail(){
+  if(!current)return;
+  const url="mailto:"+encodeURIComponent(LOTS[lotIndex].to.join(","))
+    +"?subject="+encodeURIComponent($("subjPrev").textContent)
+    +"&body="+encodeURIComponent($("body").value);
+  window.location.href=url;
+}
+
 function processAction(kind){
   const num=$("number").value.trim();
   const key=reasonSel.value;
@@ -670,18 +714,21 @@ function processAction(kind){
   $("out").style.display="block";
   renderLot();
 
-  navigator.clipboard.writeText(body)
-    .then(()=>{$("status").textContent="Script généré et copié.";})
-    .catch(()=>{$("status").textContent="Script généré. Copie manuelle requise.";});
+  navigator.clipboard.writeText(body).catch(()=>{});
 
-  $("out").scrollIntoView({behavior:"smooth",block:"nearest"});
+  if($("autoMail").checked){
+    $("status").textContent="Script généré — ouverture de Gmail...";
+    setTimeout(openMail,120);
+  }else{
+    $("status").textContent="Script généré et copié.";
+  }
 }
 
-document.querySelectorAll(".btn[data-kind]").forEach(b=>{
+document.querySelectorAll("[data-kind]").forEach(b=>{
   b.addEventListener("click",()=>processAction(b.dataset.kind));
 });
 
-/* ============ MIME / EML ============ */
+  /* ============ MIME / EML ============ */
 function b64(str){
   const bytes=new TextEncoder().encode(str);
   let bin="";
@@ -732,11 +779,8 @@ $("dlEml").addEventListener("click",()=>{
 
 $("openMailto").addEventListener("click",()=>{
   if(!current){$("status").textContent="Génère d'abord un script.";return;}
-  const url="mailto:"+encodeURIComponent(LOTS[lotIndex].to.join(","))
-    +"?subject="+encodeURIComponent($("subjPrev").textContent)
-    +"&body="+encodeURIComponent($("body").value);
-  window.location.href=url;
-  $("status").textContent="Client mail ouvert (contenu possiblement tronqué).";
+  openMail();
+  $("status").textContent="Gmail ouvert (contenu possiblement tronqué).";
 });
 
 /* ============ OUTILS ============ */
@@ -772,7 +816,7 @@ $("lockBtn").addEventListener("click",()=>{
   $("pass").value="";$("pass").focus();
 });
 
-  /* ============ SYNCHRO SERVEUR ============ */
+/* ============ SYNCHRO SERVEUR ============ */
 function setNet(msg,ok){
   const el=$("netInfo");
   el.textContent=msg||"";
@@ -843,6 +887,8 @@ function loadState(){
     document.querySelectorAll(".chk input").forEach(c=>{
       c.checked=localStorage.getItem("monarque_"+c.dataset.p)==="1";
     });
+    const am=localStorage.getItem("monarque_automail");
+    if(am!==null)$("autoMail").checked=am==="1";
   }catch(e){}
   $("repCount").textContent=reports;
   updateScore();
@@ -850,6 +896,7 @@ function loadState(){
 function saveState(){
   try{
     localStorage.setItem("monarque_rep",reports);
+    localStorage.setItem("monarque_automail",$("autoMail").checked?"1":"0");
     document.querySelectorAll(".chk input").forEach(c=>{
       localStorage.setItem("monarque_"+c.dataset.p,c.checked?"1":"0");
     });
@@ -860,9 +907,11 @@ function updateScore(){
   const pct=Math.round((done/6)*60+Math.min(reports,10)/10*40);
   $("scoreBar").style.width=pct+"%";
   $("scoreTxt").innerHTML="PRÉPARATION : <b>"+pct+" %</b>";
+  $("scoreMini").textContent=pct+" %";
   saveState();
 }
 document.querySelectorAll(".chk input").forEach(c=>c.addEventListener("change",updateScore));
+$("autoMail").addEventListener("change",saveState);
 $("repPlus").addEventListener("click",()=>{reports=Math.min(reports+1,99);$("repCount").textContent=reports;updateScore();});
 $("repMinus").addEventListener("click",()=>{reports=Math.max(reports-1,0);$("repCount").textContent=reports;updateScore();});
 
